@@ -1,6 +1,14 @@
 # 🚀 Self-Healing Creative Pipeline API
 ### *Autonomous Google Ads Asset Validator, Auto-Corrector, Smart Cropper & Filter Microservice*
 
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge&logo=github)](https://ahsaniqbal12384.github.io/Self-Healing-Creative-pipeline-google-ads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=for-the-badge&logo=docker)](https://www.docker.com/)
+
+> 🌐 **Interactive Web App**: You can use this tool directly in your browser without installing anything!  
+> 👉 **[Launch Live Web Application](https://ahsaniqbal12384.github.io/Self-Healing-Creative-pipeline-google-ads/)** (or via custom domain: [onlineerp.me](http://onlineerp.me/Self-Healing-Creative-pipeline-google-ads/))
+
 ---
 
 ## 1. Executive Summary & Objective
