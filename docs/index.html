@@ -639,11 +639,20 @@
         btn.classList.add('text-slate-600', 'dark:text-slate-400');
       });
       const activeBtn = document.getElementById(`tab-btn-${tabId}`);
-      activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-      activeBtn.classList.remove('text-slate-600', 'dark:text-slate-400');
+      if (activeBtn) {
+        activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-400');
+      }
 
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.add('hidden');
+        c.classList.remove('block');
+      });
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) {
+        targetTab.classList.remove('hidden');
+        targetTab.classList.add('block');
+      }
       lucide.createIcons();
     }
 
@@ -867,10 +876,6 @@
     let latestBulkResults = [];
     let bulkViewIsRaw = false;
 
-    // App State for Bulk Output
-    let latestBulkResults = [];
-    let bulkViewIsRaw = false;
-
     function sanitizeTextAction() {
       const inputVal = rawInput.value;
       const lines = inputVal.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -1007,7 +1012,6 @@
     // Smart Visual Engine: Bulk ZIP & Multi-Image Auto-Cropper
     // =========================================================================
     let loadedSourceImages = [];
-    let generatedCropBlobs = [];
 
     async function handleBulkImageUpload(e) {
       const files = Array.from(e.target.files);
