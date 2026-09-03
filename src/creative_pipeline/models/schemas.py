@@ -118,6 +118,19 @@ class ImageProcessResponse(BaseModel):
     outputs: List[ProcessedImageOutput]
 
 
+class BulkImageZipItem(BaseModel):
+    filename: str
+    original: OriginalImageMeta
+    outputs: List[ProcessedImageOutput]
+
+
+class BulkImageZipResponse(BaseModel):
+    total_images_processed: int
+    total_crops_generated: int
+    zip_download_url: Optional[str] = None
+    items: List[BulkImageZipItem]
+
+
 # ---------------------------------------------------------------------------
 # Module 3: Video Audit Models
 # ---------------------------------------------------------------------------
@@ -140,6 +153,17 @@ class VideoAuditResponse(BaseModel):
     status: str
     reason: str
     action: str  # "KEEP_IN_QUEUE" or "DROP_FROM_QUEUE"
+
+
+class BulkVideoAuditRequest(BaseModel):
+    video_urls: List[str] = Field(..., description="List of YouTube video URLs to audit in bulk")
+
+
+class BulkVideoAuditResponse(BaseModel):
+    total_submitted: int
+    ready_count: int
+    dropped_count: int
+    results: List[VideoAuditResponse]
 
 
 # ---------------------------------------------------------------------------

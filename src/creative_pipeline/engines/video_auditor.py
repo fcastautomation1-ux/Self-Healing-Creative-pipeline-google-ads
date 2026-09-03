@@ -6,6 +6,8 @@ from typing import Optional, Tuple
 import httpx
 
 from creative_pipeline.models.schemas import (
+    BulkVideoAuditRequest,
+    BulkVideoAuditResponse,
     VideoAuditRequest,
     VideoAuditResponse,
     VideoStatus,
@@ -199,3 +201,25 @@ class VideoAuditor:
                     reason=f"Probe failed: {str(exc)}",
                     action="DROP_FROM_QUEUE",
                 )
+
+    async def audit_videos_bulk(
+        self, request: BulkVideoAuditRequest
+    ) -> BulkVideoAuditResponse:
+        """Audits an entire list of YouTube video URLs in bulk using pure code HTTP inspection."""
+        import asyncio
+
+        tasks = [
+            self.audit_video(VideoAuditRequest(video_url=url))
+            for url in request.video_urls
+            if url.strip()
+        ]
+        results = await asyncio.gather(*tasks) if tasks else []
+        ready_count = sum(1 for r in results if r.is_usable)
+        dropped_count = len(results) - ready_count
+
+        return BulkVideoAuditResponse(
+            total_submitted=len(results),
+            ready_count=ready_count,
+            dropped_count=dropped_count,
+            results=list(results),
+        )

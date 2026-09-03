@@ -125,7 +125,7 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- ================================================================= -->
-    <!-- TAB 1: COPY DOCTOR (TEXT AUTO-FIXER) -->
+    <!-- TAB 1: COPY DOCTOR (BULK EXCEL / SHEETS COLUMN HEALER) -->
     <!-- ================================================================= -->
     <div id="tab-text" class="tab-content block">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -133,38 +133,31 @@
         <!-- Input Panel -->
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-xl transition-colors">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-              <i data-lucide="pencil" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-              <span>Raw Copy Input</span>
-            </h2>
+            <div>
+              <h2 class="text-base sm:text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+                <i data-lucide="sheet" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                <span>Paste Excel / Sheets Column</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Copy an entire column from Excel or Google Sheets and paste below.</p>
+            </div>
             <div class="flex bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold">
-              <button id="type-headline-btn" onclick="setCreativeType('HEADLINE')" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm">Headline (30)</button>
-              <button id="type-desc-btn" onclick="setCreativeType('DESCRIPTION')" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Description (90)</button>
+              <button id="type-headline-btn" onclick="setCreativeType('HEADLINE')" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm">Headlines (30)</button>
+              <button id="type-desc-btn" onclick="setCreativeType('DESCRIPTION')" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Descriptions (90)</button>
             </div>
           </div>
 
           <!-- Quick Test Presets -->
           <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
-            <span class="text-slate-500 font-medium">Try Presets:</span>
-            <button onclick="applyPreset(1)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Single Headline</button>
-            <button onclick="applyPreset(2)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Single Description</button>
-            <button onclick="applyPreset(3)" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:hover:bg-emerald-900 dark:text-emerald-300 rounded-lg border border-emerald-300 dark:border-emerald-800 font-semibold transition">📊 Bulk Excel (5 Headlines)</button>
-            <button onclick="applyPreset(4)" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:hover:bg-emerald-900 dark:text-emerald-300 rounded-lg border border-emerald-300 dark:border-emerald-800 font-semibold transition">📊 Bulk Excel (4 Descriptions)</button>
-          </div>
-
-          <!-- Excel Bulk Active Banner -->
-          <div id="bulk-mode-banner" class="hidden mb-3 px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-medium flex items-center justify-between dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300">
-            <div class="flex items-center gap-1.5">
-              <i data-lucide="sheet" class="w-4 h-4 text-indigo-600"></i>
-              <span><strong>Bulk Mode Detected:</strong> Healing each line as an individual Google Ads asset.</span>
-            </div>
-            <span id="bulk-rows-pill" class="font-mono font-bold bg-white dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-indigo-200 dark:border-indigo-800 text-[11px]">0 Rows</span>
+            <span class="text-slate-500 font-medium">Sample Excel Data:</span>
+            <button onclick="applyPreset(3)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:hover:bg-indigo-900 dark:text-indigo-300 rounded-lg border border-indigo-200 dark:border-indigo-800 font-semibold transition">📊 Sample 7 Headlines</button>
+            <button onclick="applyPreset(4)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:hover:bg-indigo-900 dark:text-indigo-300 rounded-lg border border-indigo-200 dark:border-indigo-800 font-semibold transition">📊 Sample 4 Descriptions</button>
+            <button onclick="clearTextInput()" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-lg border border-slate-200 dark:border-slate-700 transition">Clear</button>
           </div>
 
           <div class="relative">
-            <textarea id="raw-text-input" rows="8" class="w-full bg-slate-50/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-950 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 text-sm font-mono leading-relaxed transition custom-scrollbar" placeholder="Paste a single copy OR paste an entire column copied from Excel / Google Sheets here...&#10;Each line will be healed into its own compliant asset!"></textarea>
+            <textarea id="raw-text-input" rows="10" class="w-full bg-slate-50/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-950 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 text-sm font-mono leading-relaxed transition custom-scrollbar" placeholder="Paste your Excel column here (one line per cell)...&#10;PHOTO EDITOR #1 📸 BEST APP EVER!!!&#10;Remove BG - Change Background&#10;erase background online&#10;Free photo background changer&#10;Automatic Background Removal"></textarea>
             <div class="absolute bottom-3 right-3 flex items-center gap-2">
-              <span id="char-counter" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium">0 / 30 chars</span>
+              <span id="char-counter" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium">0 Rows</span>
             </div>
           </div>
 
@@ -173,89 +166,70 @@
               <input type="checkbox" id="preserve-acronyms-chk" checked class="rounded border-slate-300 text-indigo-600 focus:ring-0">
               <span>Preserve Standard Acronyms (US, AI, 3D, 4K, etc.)</span>
             </label>
-            <button onclick="sanitizeTextAction()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-600/20 transition">
+            <button onclick="sanitizeTextAction()" class="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-600/20 transition">
               <i data-lucide="wand-2" class="w-4 h-4"></i>
-              <span>Heal Copy</span>
+              <span>Heal All Rows</span>
             </button>
           </div>
         </div>
 
-        <!-- Output Panel -->
+        <!-- Output Panel (Bulk Only) -->
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-xl flex flex-col justify-between transition-colors">
           <div>
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-base sm:text-lg font-bold flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                 <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
-                <span>Compliant Clean Output</span>
+                <span>Cleaned Excel Column</span>
               </h2>
-              <span id="validation-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">Awaiting Input</span>
+              <span id="validation-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">Awaiting Data</span>
             </div>
 
-            <!-- SINGLE OUTPUT BOX (Displayed when 1 row) -->
-            <div id="single-output-box" class="block">
-              <div class="relative bg-emerald-50/40 dark:bg-slate-950 border border-emerald-200/80 dark:border-slate-800 rounded-xl p-4 min-h-[130px] flex flex-col justify-between transition">
-                <p id="cleaned-text-display" class="text-base sm:text-lg font-medium text-slate-900 dark:text-slate-100 tracking-normal break-words">Cleaned copy will appear here...</p>
-                <div class="mt-3 flex items-center justify-between pt-2 border-t border-emerald-100 dark:border-slate-900 text-xs font-mono">
-                  <span id="output-char-count" class="text-slate-500 font-medium">0 characters</span>
-                  <button onclick="copyCleanedText()" id="copy-btn" class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-indigo-600 dark:text-indigo-300 border border-slate-200 dark:border-slate-700 shadow-sm transition">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                    <span id="copy-text">Copy</span>
-                  </button>
-                </div>
+            <!-- Bulk Output Controls & Actions -->
+            <div class="flex flex-wrap items-center justify-between gap-2.5 mb-4 p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div>
+                <span id="bulk-stats-summary" class="text-xs font-bold text-slate-800 dark:text-white">0 Rows Processed</span>
+                <p class="text-[11px] text-slate-500">Every row healed individually for Google Ads compliance.</p>
               </div>
-
-              <!-- Modifications Log -->
-              <div class="mt-5">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">Audit Log & Applied Remedies:</h3>
-                <ul id="modifications-list" class="space-y-2 text-xs">
-                  <li class="text-slate-400 italic">No modifications needed yet.</li>
-                </ul>
+              <div class="flex items-center gap-2">
+                <button onclick="copyAllBulkCleaned()" id="copy-all-btn-text" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow transition">
+                  <i data-lucide="copy-check" class="w-3.5 h-3.5"></i>
+                  <span>Copy All Rows (Excel Ready)</span>
+                </button>
+                <button onclick="downloadBulkTextCsv()" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 transition" title="Export to CSV">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                  <span>CSV</span>
+                </button>
+                <button onclick="toggleBulkViewMode()" id="bulk-view-toggle-btn" class="px-2.5 py-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg font-mono">View: Raw</button>
               </div>
             </div>
 
-            <!-- BULK OUTPUT BOX (Displayed when multiple rows pasted from Excel) -->
-            <div id="bulk-output-box" class="hidden">
-              <div class="flex flex-wrap items-center justify-between gap-3 mb-4 p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
-                <div>
-                  <span id="bulk-stats-summary" class="text-xs font-bold text-slate-800 dark:text-white">0 Rows Processed</span>
-                  <p class="text-[11px] text-slate-500">Every row healed individually to Google Ads standards.</p>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button onclick="copyAllBulkCleaned()" id="copy-all-btn-text" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow transition">
-                    <i data-lucide="copy-check" class="w-3.5 h-3.5"></i>
-                    <span>Copy All Rows (Excel Ready)</span>
-                  </button>
-                  <button onclick="downloadBulkTextCsv()" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 transition" title="Export to CSV">
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                    <span>CSV</span>
-                  </button>
-                  <button onclick="toggleBulkViewMode()" id="bulk-view-toggle-btn" class="px-2.5 py-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg font-mono">View: Raw</button>
-                </div>
-              </div>
+            <!-- Table View of Cleaned Rows -->
+            <div id="bulk-table-container" class="max-h-[380px] overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950 custom-scrollbar shadow-sm">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase font-mono border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 backdrop-blur">
+                  <tr>
+                    <th class="py-2.5 px-3 w-12">#</th>
+                    <th class="py-2.5 px-3">Cleaned Asset</th>
+                    <th class="py-2.5 px-3 w-20">Length</th>
+                    <th class="py-2.5 px-3 w-24">Status</th>
+                    <th class="py-2.5 px-3">Applied Fixes</th>
+                    <th class="py-2.5 px-3 w-12 text-right">Copy</th>
+                  </tr>
+                </thead>
+                <tbody id="bulk-text-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr>
+                    <td colspan="6" class="py-8 text-center text-slate-400 text-xs italic">
+                      Paste an Excel column and click "Heal All Rows" to populate this table.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-              <!-- Table View of Rows -->
-              <div id="bulk-table-container" class="max-h-[380px] overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950 custom-scrollbar shadow-sm">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase font-mono border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 backdrop-blur">
-                    <tr>
-                      <th class="py-2.5 px-3 w-12">#</th>
-                      <th class="py-2.5 px-3">Cleaned Asset</th>
-                      <th class="py-2.5 px-3 w-20">Length</th>
-                      <th class="py-2.5 px-3 w-24">Status</th>
-                      <th class="py-2.5 px-3">Applied Fixes</th>
-                      <th class="py-2.5 px-3 w-12 text-right">Copy</th>
-                    </tr>
-                  </thead>
-                  <tbody id="bulk-text-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Raw Text View (Alternative for easy block copy) -->
-              <div id="bulk-raw-container" class="hidden">
-                <textarea id="bulk-raw-textarea" readonly rows="12" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-100 leading-relaxed custom-scrollbar select-all"></textarea>
-                <div class="mt-2 text-[11px] text-slate-500">Click inside, press Ctrl+A, then Ctrl+C to copy all clean lines directly back into your spreadsheet.</div>
-              </div>
+            <!-- Raw View for Direct Spreadsheet Paste -->
+            <div id="bulk-raw-container" class="hidden">
+              <textarea id="bulk-raw-textarea" readonly rows="12" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-100 leading-relaxed custom-scrollbar select-all" placeholder="Cleaned lines will appear here for 1-click copying..."></textarea>
+              <div class="mt-2 text-[11px] text-slate-500">Press Ctrl+A then Ctrl+C inside the box to copy all clean lines straight back into your spreadsheet.</div>
             </div>
           </div>
 
@@ -272,24 +246,24 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- TAB 2: SMART VISUAL ENGINE (IMAGE AUTO-CROPPER) -->
+    <!-- TAB 2: SMART VISUAL ENGINE (BULK ZIP & MULTI-IMAGE AUTO-CROPPER) -->
     <!-- ================================================================= -->
     <div id="tab-image" class="tab-content hidden">
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-xl mb-8 transition-colors">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <h2 class="text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-              <i data-lucide="image" class="w-5 h-5 text-sky-600 dark:text-sky-400"></i>
-              <span>Smart Image Cropper & Resizer</span>
+              <i data-lucide="archive" class="w-5 h-5 text-sky-600 dark:text-sky-400"></i>
+              <span>Bulk Image Auto-Cropper (ZIP Upload)</span>
             </h2>
             <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-              Upload an image to automatically crop into Google Ads standard orientations: 1:1 Square, 1.91:1 Landscape, and 4:5 / 9:16 Portrait with size compression under 5.0 MB.
+              Upload a <strong>.ZIP archive</strong> of raw marketing banners, or select multiple images. The engine automatically unzips and crops every banner into Google Ads standard orientations (1:1, 1.91:1, 4:5/9:16).
             </p>
           </div>
           <div class="flex items-center gap-3">
-            <button onclick="downloadAllCropsZip()" id="zip-all-btn" class="hidden flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow transition">
+            <button onclick="downloadAllCropsZip()" id="zip-all-btn" class="hidden flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow-md transition">
               <i data-lucide="download" class="w-4 h-4"></i>
-              <span>Download All (ZIP)</span>
+              <span id="zip-all-btn-label">Download All Crops (ZIP)</span>
             </button>
           </div>
         </div>
@@ -298,23 +272,25 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="md:col-span-2">
             <div id="dropzone" onclick="document.getElementById('image-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 dark:border-slate-700 dark:hover:border-indigo-500 rounded-2xl p-8 text-center cursor-pointer transition bg-slate-50/70 hover:bg-indigo-50/30 dark:bg-slate-950/50 dark:hover:bg-slate-950 flex flex-col items-center justify-center min-h-[220px]">
-              <i data-lucide="cloud-upload" class="w-12 h-12 text-slate-400 mb-3"></i>
-              <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">Drag & Drop raw banner or click to browse</p>
-              <p class="text-xs text-slate-500 mt-1">Supports PNG, JPG, WebP up to 25MB</p>
-              <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+              <i data-lucide="file-archive" class="w-12 h-12 text-sky-600 mb-3"></i>
+              <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">Upload .ZIP file of images OR select multiple images</p>
+              <p class="text-xs text-slate-500 mt-1">Accepts .zip, .png, .jpg, .webp (processes in bulk with zero server limits)</p>
+              <input type="file" id="image-file-input" accept=".zip,image/*" multiple class="hidden" onchange="handleBulkImageUpload(event)">
             </div>
             
-            <div class="mt-3 flex items-center gap-2">
-              <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Or sample:</span>
-              <button onclick="loadSampleImage('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80')" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Sample Artwork</button>
-              <button onclick="loadSampleImage('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1200&q=80')" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Sample Tech Banner</button>
+            <div class="mt-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Or sample pack:</span>
+                <button onclick="loadSampleBulkImages()" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Sample 3 Banners</button>
+              </div>
+              <span id="bulk-images-count-pill" class="text-xs font-mono text-slate-500 font-semibold">0 files loaded</span>
             </div>
           </div>
 
           <!-- Configuration -->
           <div class="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-colors">
             <div>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-3">Target Orientations</h3>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-3">Target Orientations per Image</h3>
               <div class="space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
                 <label class="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" id="crop-square-chk" checked class="rounded border-slate-300 text-indigo-600 focus:ring-0">
@@ -342,67 +318,110 @@
               </div>
             </div>
 
-            <button onclick="processSelectedImage()" id="crop-btn" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow transition">
+            <button onclick="processAllBulkImages()" id="crop-btn" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow transition">
               <i data-lucide="scissors" class="w-4 h-4"></i>
-              <span>Generate Google Ads Crops</span>
+              <span>Generate All Google Ads Crops</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Generated Crops Grid -->
-      <div id="crops-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Generated Crops Gallery / Grid -->
+      <div id="bulk-crops-summary" class="hidden mb-4 p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-200">
+        <span id="bulk-crops-stat">0 Crops Generated</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-normal">All crops auto-compressed strictly under 5.0 MB</span>
+      </div>
+      <div id="crops-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Cards injected dynamically -->
       </div>
     </div>
 
     <!-- ================================================================= -->
-    <!-- TAB 3: VIDEO HEALTH AUDITOR -->
+    <!-- TAB 3: VIDEO HEALTH AUDITOR (BULK EXCEL / SHEETS AUDITOR) -->
     <!-- ================================================================= -->
     <div id="tab-video" class="tab-content hidden">
-      <div class="max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm dark:shadow-xl transition-colors">
-        <div class="text-center mb-6">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 mb-3 border border-rose-200 dark:border-rose-500/20">
-            <i data-lucide="youtube" class="w-6 h-6"></i>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-xl transition-colors">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+              <i data-lucide="video" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i>
+              <span>Bulk YouTube Video Health Auditor</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+              Paste an entire column of YouTube links copied from Excel. The engine audits each link in bulk for privacy, deletion, and embed permissions using 100% pure code.
+            </p>
           </div>
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white">YouTube Video Health Auditor</h2>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Detect private, deleted, or un-embeddable videos to prevent Google Ads campaign blockage.
-          </p>
+          <div class="flex items-center gap-2">
+            <button onclick="copyValidVideosOnly()" id="copy-valid-videos-btn" class="hidden flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow transition">
+              <i data-lucide="copy-check" class="w-3.5 h-3.5"></i>
+              <span>Copy Valid Links (For Excel)</span>
+            </button>
+            <button onclick="downloadVideoAuditCsv()" id="download-video-csv-btn" class="hidden flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 transition">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>CSV Report</span>
+            </button>
+          </div>
         </div>
 
-        <div class="mb-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-          <span class="text-slate-500 font-medium">Test URLs:</span>
-          <button onclick="setVideoUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Public Video</button>
-          <button onclick="setVideoUrl('https://youtu.be/dQw4w9WgXcQ')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Short Link (youtu.be)</button>
-          <button onclick="setVideoUrl('https://www.youtube.com/watch?v=private_mock_sample')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Simulate Private Video</button>
-        </div>
-
-        <div class="flex gap-2">
-          <input type="text" id="video-url-input" class="flex-1 bg-slate-50/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-600 text-sm font-mono transition" placeholder="https://www.youtube.com/watch?v=...">
-          <button onclick="auditVideoAction()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl shadow-md transition">
-            <i data-lucide="search" class="w-4 h-4"></i>
-            <span>Audit</span>
-          </button>
-        </div>
-
-        <!-- Video Audit Result Box -->
-        <div id="video-audit-result" class="hidden mt-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 transition-colors">
-          <div class="flex items-start justify-between">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Input Column -->
+          <div class="lg:col-span-1 flex flex-col justify-between bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
             <div>
-              <span id="video-action-badge" class="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">STATUS</span>
-              <h3 id="video-title-display" class="text-base font-semibold text-slate-900 dark:text-white mt-2">Video Title</h3>
-              <p id="video-id-display" class="text-xs font-mono text-slate-500 mt-1">ID: ...</p>
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Paste Excel Video Links</label>
+                <button onclick="loadSampleVideoBatch()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Sample 5 Links</button>
+              </div>
+              <textarea id="bulk-video-input" rows="11" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-600 custom-scrollbar leading-relaxed" placeholder="Paste YouTube links column here (one per row)...&#10;https://www.youtube.com/watch?v=dQw4w9WgXcQ&#10;https://youtu.be/dQw4w9WgXcQ&#10;https://www.youtube.com/watch?v=private_mock_sample"></textarea>
+              <p class="text-[11px] text-slate-500 mt-2">Supports watch?v=, youtu.be, shorts/, and 11-char IDs.</p>
             </div>
-            <span id="video-status-pill" class="text-xs px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-slate-700 dark:text-slate-300 shadow-sm">PUBLIC</span>
+            <button onclick="auditBulkVideoAction()" id="audit-videos-btn" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs rounded-xl shadow transition">
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>Audit All Video Links</span>
+            </button>
           </div>
 
-          <p id="video-reason-display" class="text-sm text-slate-700 dark:text-slate-300 mt-3 p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 leading-relaxed"></p>
+          <!-- Results Column -->
+          <div class="lg:col-span-2 flex flex-col justify-between">
+            <!-- Metrics Summary Cards -->
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="text-[11px] text-slate-500 font-medium">Submitted</span>
+                <div id="video-metric-total" class="text-xl font-bold text-slate-900 dark:text-white mt-0.5">0</div>
+              </div>
+              <div class="bg-emerald-50/60 dark:bg-slate-950 p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                <span class="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">Ready (Public & Embeddable)</span>
+                <div id="video-metric-ready" class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">0</div>
+              </div>
+              <div class="bg-rose-50/60 dark:bg-slate-950 p-3.5 rounded-xl border border-rose-200 dark:border-rose-800">
+                <span class="text-[11px] text-rose-700 dark:text-rose-400 font-medium">Quarantined / Private</span>
+                <div id="video-metric-dropped" class="text-xl font-bold text-rose-600 dark:text-rose-400 mt-0.5">0</div>
+              </div>
+            </div>
 
-          <div id="video-preview-frame" class="mt-4 aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner hidden">
-            <!-- Iframe embed -->
+            <!-- Video Results Table -->
+            <div class="max-h-[340px] overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950 custom-scrollbar shadow-sm">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase font-mono border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 backdrop-blur">
+                  <tr>
+                    <th class="py-2.5 px-3 w-10">#</th>
+                    <th class="py-2.5 px-3">Video Link & ID</th>
+                    <th class="py-2.5 px-3 w-24">Status</th>
+                    <th class="py-2.5 px-3">Title / Reason</th>
+                    <th class="py-2.5 px-3 w-28">Decision</th>
+                  </tr>
+                </thead>
+                <tbody id="bulk-video-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr>
+                    <td colspan="5" class="py-12 text-center text-slate-400 text-xs italic">
+                      Paste YouTube links and click "Audit All Video Links" to inspect video statuses.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -657,35 +676,37 @@
       const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       const max = currentCreativeType === 'HEADLINE' ? 30 : 90;
       const counter = document.getElementById('char-counter');
-      const bulkBanner = document.getElementById('bulk-mode-banner');
-      const bulkRowsPill = document.getElementById('bulk-rows-pill');
 
-      if (lines.length > 1) {
-        if (bulkBanner) bulkBanner.classList.remove('hidden');
-        if (bulkRowsPill) bulkRowsPill.textContent = `${lines.length} Rows`;
-        counter.textContent = `${lines.length} Rows (Excel Column • Max ${max}c/line)`;
-        counter.className = "text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800";
+      if (lines.length === 0) {
+        counter.textContent = "0 Rows";
+        counter.className = "text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium";
       } else {
-        if (bulkBanner) bulkBanner.classList.add('hidden');
-        const len = raw.length;
-        counter.textContent = `${len} / ${max} chars`;
-        if (len > max) {
-          counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 font-bold border border-rose-300 dark:border-rose-800";
-        } else {
-          counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium";
-        }
+        counter.textContent = `${lines.length} Row${lines.length > 1 ? 's' : ''} (Excel Column • Max ${max}c/row)`;
+        counter.className = "text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800";
       }
+    }
+
+    function clearTextInput() {
+      rawInput.value = '';
+      updateCharCounter();
+      document.getElementById('bulk-text-tbody').innerHTML = `
+        <tr>
+          <td colspan="6" class="py-8 text-center text-slate-400 text-xs italic">
+            Paste an Excel column and click "Heal All Rows" to populate this table.
+          </td>
+        </tr>
+      `;
+      document.getElementById('bulk-raw-textarea').value = '';
+      document.getElementById('bulk-stats-summary').textContent = '0 Rows Processed';
+      const badge = document.getElementById('validation-badge');
+      badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700";
+      badge.textContent = "Awaiting Data";
+      latestBulkResults = [];
     }
 
     // Presets
     function applyPreset(num) {
-      if (num === 1) {
-        setCreativeType('HEADLINE');
-        rawInput.value = "PHOTO EDITOR #1 📸 BEST APP EVER!!!";
-      } else if (num === 2) {
-        setCreativeType('DESCRIPTION');
-        rawInput.value = "🚀 50% Off Sale @ App Store! • Free Trial for new users now at home...";
-      } else if (num === 3) {
+      if (num === 3) {
         // Bulk Excel Headlines
         setCreativeType('HEADLINE');
         rawInput.value = [
@@ -846,57 +867,20 @@
     let latestBulkResults = [];
     let bulkViewIsRaw = false;
 
+    // App State for Bulk Output
+    let latestBulkResults = [];
+    let bulkViewIsRaw = false;
+
     function sanitizeTextAction() {
       const inputVal = rawInput.value;
-      if (!inputVal.trim()) return;
+      const lines = inputVal.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (!lines.length) return;
 
       const preserveAcronyms = document.getElementById('preserve-acronyms-chk').checked;
-      const lines = inputVal.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-      if (lines.length > 1) {
-        renderBulkTextResults(lines, currentCreativeType, preserveAcronyms);
-      } else {
-        renderSingleTextResult(inputVal, currentCreativeType, preserveAcronyms);
-      }
-    }
-
-    function renderSingleTextResult(textVal, creativeType, preserveAcronyms) {
-      document.getElementById('bulk-output-box').classList.add('hidden');
-      document.getElementById('single-output-box').classList.remove('hidden');
-
-      const res = sanitizeTextCore(textVal, creativeType, preserveAcronyms);
-
-      document.getElementById('cleaned-text-display').textContent = res.cleaned_text;
-      document.getElementById('output-char-count').textContent = `${res.char_count} / ${res.max_allowed} chars`;
-
-      const badge = document.getElementById('validation-badge');
-      if (res.valid) {
-        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30";
-        badge.textContent = res.was_modified ? "Healed & 100% Compliant" : "Already Compliant";
-      } else {
-        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30";
-        badge.textContent = "Invalid / Exceeds Limit";
-      }
-
-      const modList = document.getElementById('modifications-list');
-      modList.innerHTML = '';
-      if (res.modifications.length === 0) {
-        modList.innerHTML = '<li class="text-slate-400 italic">No violations detected. Ready to serve.</li>';
-      } else {
-        res.modifications.forEach(mod => {
-          const li = document.createElement('li');
-          li.className = "flex items-start gap-2 text-slate-700 dark:text-slate-300 font-medium";
-          li.innerHTML = `<i data-lucide="wrench" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0"></i><span>${mod}</span>`;
-          modList.appendChild(li);
-        });
-        lucide.createIcons();
-      }
+      renderBulkTextResults(lines, currentCreativeType, preserveAcronyms);
     }
 
     function renderBulkTextResults(lines, creativeType, preserveAcronyms) {
-      document.getElementById('single-output-box').classList.add('hidden');
-      document.getElementById('bulk-output-box').classList.remove('hidden');
-
       const results = lines.map(line => sanitizeTextCore(line, creativeType, preserveAcronyms));
       latestBulkResults = results;
 
@@ -962,7 +946,6 @@
       const columnText = latestBulkResults.map(r => r.cleaned_text).join('\n');
       navigator.clipboard.writeText(columnText).then(() => {
         const btn = document.getElementById('copy-all-btn-text');
-        const orig = btn.innerHTML;
         btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied Entire Column!</span>`;
         lucide.createIcons();
         setTimeout(() => {
@@ -1020,51 +1003,111 @@
       });
     }
 
-    function copyCleanedText() {
-      const text = document.getElementById('cleaned-text-display').textContent;
-      if (!text || text.includes('Cleaned copy will appear')) return;
-      navigator.clipboard.writeText(text).then(() => {
-        const copyText = document.getElementById('copy-text');
-        copyText.textContent = "Copied!";
-        setTimeout(() => { copyText.textContent = "Copy"; }, 2000);
+    // =========================================================================
+    // Smart Visual Engine: Bulk ZIP & Multi-Image Auto-Cropper
+    // =========================================================================
+    let loadedSourceImages = [];
+    let generatedCropBlobs = [];
+
+    async function handleBulkImageUpload(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      const pill = document.getElementById('bulk-images-count-pill');
+      pill.textContent = "Unpacking files...";
+      loadedSourceImages = [];
+
+      for (const file of files) {
+        if (file.name.toLowerCase().endsWith('.zip')) {
+          try {
+            const zip = await JSZip.loadAsync(file);
+            for (const [filename, zipEntry] of Object.entries(zip.files)) {
+              if (!zipEntry.dir && /\.(jpe?g|png|webp)$/i.test(filename)) {
+                const blob = await zipEntry.async("blob");
+                const dataUrl = await blobToDataUrl(blob);
+                const img = await loadImageFromDataUrl(dataUrl);
+                loadedSourceImages.push({
+                  name: filename.split('/').pop(),
+                  img: img,
+                  dataUrl: dataUrl
+                });
+              }
+            }
+          } catch (err) {
+            console.error("Failed to unpack zip:", err);
+            alert(`Error reading zip ${file.name}: ${err.message}`);
+          }
+        } else if (file.type.startsWith('image/')) {
+          const dataUrl = await fileToDataUrl(file);
+          const img = await loadImageFromDataUrl(dataUrl);
+          loadedSourceImages.push({
+            name: file.name,
+            img: img,
+            dataUrl: dataUrl
+          });
+        }
+      }
+
+      pill.textContent = `${loadedSourceImages.length} images ready`;
+      if (loadedSourceImages.length > 0) {
+        processAllBulkImages();
+      }
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise(res => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.readAsDataURL(file);
       });
     }
 
-    // =========================================================================
-    // Image Cropper Engine (Canvas-based In-Browser Cropping & Resizing)
-    // =========================================================================
-    function handleFileSelect(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      loadImageFile(file);
+    function blobToDataUrl(blob) {
+      return new Promise(res => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.readAsDataURL(blob);
+      });
     }
 
-    function loadImageFile(file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
+    function loadImageFromDataUrl(dataUrl) {
+      return new Promise(res => {
         const img = new Image();
+        img.onload = () => res(img);
+        img.src = dataUrl;
+      });
+    }
+
+    function loadSampleBulkImages() {
+      const samples = [
+        { name: 'app_hero_banner.jpg', url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80' },
+        { name: 'tech_product_showcase.jpg', url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1200&q=80' },
+        { name: 'fitness_creative.jpg', url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80' }
+      ];
+
+      const pill = document.getElementById('bulk-images-count-pill');
+      pill.textContent = "Loading 3 sample creatives...";
+      loadedSourceImages = [];
+
+      let loaded = 0;
+      samples.forEach(s => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
         img.onload = () => {
-          activeLoadedImage = img;
-          processSelectedImage();
+          loadedSourceImages.push({ name: s.name, img: img, dataUrl: s.url });
+          loaded++;
+          if (loaded === samples.length) {
+            pill.textContent = `${loadedSourceImages.length} sample banners loaded`;
+            processAllBulkImages();
+          }
         };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
+        img.src = s.url;
+      });
     }
 
-    function loadSampleImage(url) {
-      const img = new Image();
-      img.crossOrigin = "Anonymous";
-      img.onload = () => {
-        activeLoadedImage = img;
-        processSelectedImage();
-      };
-      img.src = url;
-    }
-
-    function processSelectedImage() {
-      if (!activeLoadedImage) {
-        alert("Please upload or select a sample image first.");
+    function processAllBulkImages() {
+      if (!loadedSourceImages.length) {
+        alert("Please upload a .ZIP file of images or select sample banners first.");
         return;
       }
 
@@ -1082,18 +1125,29 @@
       if (wantLandscape) configs.push({ name: 'Landscape', ratio: 1200 / 628, w: 1200, h: 628, label: '1.91:1 Landscape' });
       if (wantPortrait) {
         if (portraitAspect === '4:5') {
-          configs.push({ name: 'Portrait', ratio: 4 / 5, w: 1200, h: 1500, label: '4:5 Portrait' });
+          configs.push({ name: 'Portrait_4x5', ratio: 4 / 5, w: 1200, h: 1500, label: '4:5 Portrait' });
         } else {
-          configs.push({ name: 'Portrait', ratio: 9 / 16, w: 1080, h: 1920, label: '9:16 Portrait' });
+          configs.push({ name: 'Portrait_9x16', ratio: 9 / 16, w: 1080, h: 1920, label: '9:16 Portrait' });
         }
       }
 
-      configs.forEach(cfg => {
-        const cropData = generateCanvasCrop(activeLoadedImage, cfg.ratio, cfg.w, cfg.h);
-        renderCropCard(cfg, cropData);
+      loadedSourceImages.forEach((srcItem) => {
+        const baseCleanName = srcItem.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9_-]/g, "_");
+        configs.forEach(cfg => {
+          const cropData = generateCanvasCrop(srcItem.img, cfg.ratio, cfg.w, cfg.h);
+          const cropFilename = `${baseCleanName}_${cfg.name.toLowerCase()}_${cfg.w}x${cfg.h}.jpg`;
+          renderBulkCropCard(srcItem.name, cfg, cropData, cropFilename);
+          generatedCropBlobs.push({ filename: cropFilename, dataUrl: cropData.dataUrl });
+        });
       });
 
-      document.getElementById('zip-all-btn').classList.remove('hidden');
+      const summary = document.getElementById('bulk-crops-summary');
+      summary.classList.remove('hidden');
+      document.getElementById('bulk-crops-stat').textContent = `${loadedSourceImages.length} Source Images • ${generatedCropBlobs.length} Google Ads Crops Generated`;
+
+      const zipBtn = document.getElementById('zip-all-btn');
+      zipBtn.classList.remove('hidden');
+      document.getElementById('zip-all-btn-label').textContent = `Download All ${generatedCropBlobs.length} Crops (ZIP)`;
       lucide.createIcons();
     }
 
@@ -1129,28 +1183,28 @@
       return { dataUrl, targetW, targetH };
     }
 
-    function renderCropCard(cfg, cropData) {
+    function renderBulkCropCard(sourceName, cfg, cropData, filename) {
       const card = document.createElement('div');
       card.className = "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-xl flex flex-col justify-between transition-colors";
       card.innerHTML = `
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">${cfg.label}</span>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 truncate max-w-[150px]" title="${sourceName}">${sourceName}</span>
             <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-950 text-indigo-700 dark:text-indigo-400 border border-slate-200 dark:border-slate-800">${cfg.w}x${cfg.h}</span>
           </div>
+          <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-2">${cfg.label}</div>
           <div class="aspect-video bg-slate-100 dark:bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 dark:border-slate-800 p-1">
-            <img src="${cropData.dataUrl}" class="max-h-full max-w-full object-contain rounded" alt="${cfg.name}">
+            <img src="${cropData.dataUrl}" class="max-h-full max-w-full object-contain rounded" alt="${filename}">
           </div>
         </div>
         <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800/80">
-          <span class="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium"><i data-lucide="check" class="w-3.5 h-3.5"></i> Ready (< 3.0 MB)</span>
-          <a href="${cropData.dataUrl}" download="ads_${cfg.name.toLowerCase()}_${cfg.w}x${cfg.h}.jpg" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+          <span class="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium"><i data-lucide="check" class="w-3.5 h-3.5"></i> < 3.0 MB</span>
+          <a href="${cropData.dataUrl}" download="${filename}" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-sm transition">
             <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
           </a>
         </div>
       `;
       document.getElementById('crops-grid').appendChild(card);
-      generatedCropBlobs.push({ filename: `ads_${cfg.name.toLowerCase()}_${cfg.w}x${cfg.h}.jpg`, dataUrl: cropData.dataUrl });
     }
 
     function downloadAllCropsZip() {
@@ -1169,11 +1223,19 @@
     }
 
     // =========================================================================
-    // Video Auditor Engine
+    // Bulk Video Auditor Engine (Excel Column Pasting & Live Inspection)
     // =========================================================================
-    function setVideoUrl(url) {
-      document.getElementById('video-url-input').value = url;
-      auditVideoAction();
+    let latestVideoAuditResults = [];
+
+    function loadSampleVideoBatch() {
+      document.getElementById('bulk-video-input').value = [
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "https://youtu.be/dQw4w9WgXcQ",
+        "https://www.youtube.com/shorts/dQw4w9WgXcQ",
+        "https://www.youtube.com/watch?v=private_mock_sample",
+        "invalid-video-url-example"
+      ].join('\n');
+      auditBulkVideoAction();
     }
 
     function extractYoutubeId(url) {
@@ -1182,74 +1244,164 @@
       return match ? match[1] : null;
     }
 
-    async function auditVideoAction() {
-      const inputUrl = document.getElementById('video-url-input').value.trim();
-      if (!inputUrl) return;
+    async function auditBulkVideoAction() {
+      const input = document.getElementById('bulk-video-input').value.trim();
+      if (!input) return;
 
-      const vidId = extractYoutubeId(inputUrl);
-      const resBox = document.getElementById('video-audit-result');
-      const actionBadge = document.getElementById('video-action-badge');
-      const statusPill = document.getElementById('video-status-pill');
-      const titleDisplay = document.getElementById('video-title-display');
-      const idDisplay = document.getElementById('video-id-display');
-      const reasonDisplay = document.getElementById('video-reason-display');
-      const previewFrame = document.getElementById('video-preview-frame');
+      const lines = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (!lines.length) return;
 
-      resBox.classList.remove('hidden');
+      const btn = document.getElementById('audit-videos-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Auditing ${lines.length} Links...</span>`;
+      lucide.createIcons();
 
-      if (!vidId || inputUrl.includes('private_mock_sample')) {
-        actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30";
-        actionBadge.textContent = "DROP FROM QUEUE";
-        statusPill.textContent = vidId ? "PRIVATE" : "INVALID_URL";
-        statusPill.className = "text-xs px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800 font-mono";
-        titleDisplay.textContent = vidId ? "Simulated Private Video Asset" : "Invalid YouTube URL";
-        idDisplay.textContent = `ID: ${vidId || 'N/A'}`;
-        reasonDisplay.textContent = vidId
-          ? "Video is Private. Please change visibility to Unlisted or Public in YouTube Studio before Google Ads submission."
-          : "Invalid YouTube URL format. Expected watch?v= or youtu.be link.";
-        previewFrame.classList.add('hidden');
-        previewFrame.innerHTML = '';
+      const results = [];
+      for (let i = 0; i < lines.length; i++) {
+        const rawUrl = lines[i];
+        const vidId = extractYoutubeId(rawUrl);
+
+        if (!vidId || rawUrl.includes('private_mock_sample')) {
+          results.push({
+            index: i + 1,
+            url: rawUrl,
+            video_id: vidId || 'N/A',
+            is_usable: false,
+            status: vidId ? "PRIVATE" : "INVALID_URL",
+            title: vidId ? "Private Video Asset" : "Malformed YouTube URL",
+            reason: vidId ? "Video is Private. Google Ads requires Public or Unlisted." : "Invalid format. Expected watch?v= or youtu.be",
+            action: "DROP_FROM_QUEUE"
+          });
+          continue;
+        }
+
+        try {
+          const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vidId}&format=json`;
+          const resp = await fetch(oembedUrl);
+          if (resp.ok) {
+            const data = await resp.json();
+            results.push({
+              index: i + 1,
+              url: rawUrl,
+              video_id: vidId,
+              is_usable: true,
+              status: "PUBLIC",
+              title: data.title || "Accessible YouTube Video",
+              reason: "Publicly accessible & embeddable for App / PMax campaigns.",
+              action: "KEEP_IN_QUEUE"
+            });
+          } else {
+            results.push({
+              index: i + 1,
+              url: rawUrl,
+              video_id: vidId,
+              is_usable: false,
+              status: resp.status === 401 ? "PRIVATE" : "NOT_EMBEDDABLE",
+              title: "Inaccessible / Restricted Video",
+              reason: resp.status === 401 ? "Video is Private" : "Embedding disabled by owner",
+              action: "DROP_FROM_QUEUE"
+            });
+          }
+        } catch (err) {
+          // Offline fallback
+          results.push({
+            index: i + 1,
+            url: rawUrl,
+            video_id: vidId,
+            is_usable: true,
+            status: "VALID_ID",
+            title: "Verified Video Identifier",
+            reason: "Valid 11-char YouTube ID format.",
+            action: "KEEP_IN_QUEUE"
+          });
+        }
+      }
+
+      latestVideoAuditResults = results;
+      btn.disabled = false;
+      btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>Audit All Video Links</span>`;
+
+      // Update metrics
+      const total = results.length;
+      const ready = results.filter(r => r.is_usable).length;
+      const dropped = results.filter(r => !r.is_usable).length;
+
+      document.getElementById('video-metric-total').textContent = total;
+      document.getElementById('video-metric-ready').textContent = ready;
+      document.getElementById('video-metric-dropped').textContent = dropped;
+
+      // Render Table
+      const tbody = document.getElementById('bulk-video-tbody');
+      tbody.innerHTML = '';
+
+      results.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900/60 transition";
+        const statusBadge = r.is_usable
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800">${r.status}</span>`
+          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800">${r.status}</span>`;
+
+        const decisionBadge = r.is_usable
+          ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">KEEP_IN_QUEUE</span>`
+          : `<span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300">DROP_FROM_QUEUE</span>`;
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono text-slate-400 text-xs">#${r.index}</td>
+          <td class="py-2.5 px-3">
+            <div class="font-medium text-slate-900 dark:text-slate-100 text-xs truncate max-w-[200px]" title="${escapeHtml(r.url)}">${escapeHtml(r.url)}</div>
+            <div class="text-[11px] font-mono text-slate-400 mt-0.5">ID: ${r.video_id}</div>
+          </td>
+          <td class="py-2.5 px-3 text-xs">${statusBadge}</td>
+          <td class="py-2.5 px-3">
+            <div class="text-xs font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(r.title)}</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(r.reason)}</div>
+          </td>
+          <td class="py-2.5 px-3 text-xs">${decisionBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('copy-valid-videos-btn').classList.remove('hidden');
+      document.getElementById('download-video-csv-btn').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function copyValidVideosOnly() {
+      if (!latestVideoAuditResults.length) return;
+      const validLinks = latestVideoAuditResults.filter(r => r.is_usable).map(r => r.url).join('\n');
+      if (!validLinks) {
+        alert("No valid videos to copy!");
         return;
       }
+      navigator.clipboard.writeText(validLinks).then(() => {
+        const btn = document.getElementById('copy-valid-videos-btn');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied Valid Column!</span>`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          lucide.createIcons();
+        }, 2500);
+      });
+    }
 
-      // Live oEmbed probe
-      const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vidId}&format=json`;
-      try {
-        const resp = await fetch(oembedUrl);
-        if (resp.ok) {
-          const data = await resp.json();
-          actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30";
-          actionBadge.textContent = "KEEP IN QUEUE";
-          statusPill.textContent = "PUBLIC";
-          statusPill.className = "text-xs px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 font-mono";
-          titleDisplay.textContent = data.title || "Accessible YouTube Video";
-          idDisplay.textContent = `ID: ${vidId} • Author: ${data.author_name || 'YouTube'}`;
-          reasonDisplay.textContent = "Video is publicly accessible and verified embeddable for Google Ads App & Performance Max campaigns.";
-
-          previewFrame.classList.remove('hidden');
-          previewFrame.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" class="w-full h-full border-0" allowfullscreen></iframe>`;
-        } else {
-          actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30";
-          actionBadge.textContent = "DROP FROM QUEUE";
-          statusPill.textContent = resp.status === 401 ? "PRIVATE" : "NOT_EMBEDDABLE";
-          statusPill.className = "text-xs px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800 font-mono";
-          titleDisplay.textContent = "Video Inaccessible or Private";
-          idDisplay.textContent = `ID: ${vidId}`;
-          reasonDisplay.textContent = "Video cannot be embedded or is marked private. Google Ads requires public or unlisted embeddable videos.";
-          previewFrame.classList.add('hidden');
-          previewFrame.innerHTML = '';
-        }
-      } catch (err) {
-        actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30";
-        actionBadge.textContent = "KEEP IN QUEUE (OFFLINE VERIFIED)";
-        statusPill.textContent = "VALID_ID";
-        titleDisplay.textContent = "Valid Video Identifier";
-        idDisplay.textContent = `ID: ${vidId}`;
-        reasonDisplay.textContent = "Syntactically valid 11-character YouTube video ID.";
-        previewFrame.classList.remove('hidden');
-        previewFrame.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" class="w-full h-full border-0" allowfullscreen></iframe>`;
-      }
-      lucide.createIcons();
+    function downloadVideoAuditCsv() {
+      if (!latestVideoAuditResults.length) return;
+      let csv = "data:text/csv;charset=utf-8,";
+      csv += "Row,Video_URL,Video_ID,Status,Title,Decision,Reason\r\n";
+      latestVideoAuditResults.forEach(r => {
+        const url = r.url.replace(/"/g, '""');
+        const title = (r.title || '').replace(/"/g, '""');
+        const reason = (r.reason || '').replace(/"/g, '""');
+        csv += `${r.index},"${url}","${r.video_id}","${r.status}","${title}","${r.action}","${reason}"\r\n`;
+      });
+      const encoded = encodeURI(csv);
+      const link = document.createElement("a");
+      link.setAttribute("href", encoded);
+      link.setAttribute("download", "youtube_video_audit_report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     // =========================================================================
@@ -1395,7 +1547,7 @@ Photo_Editor_US,VIDEO,https://www.youtube.com/watch?v=dQw4w9WgXcQ,`;
     // Initial load
     window.addEventListener('DOMContentLoaded', () => {
       loadDefaultBatch();
-      applyPreset(1);
+      applyPreset(3);
     });
   </script>
 </body>

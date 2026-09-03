@@ -125,3 +125,26 @@ class TestPureCodeVideoAuditor:
         assert res.is_usable is False
         assert res.status == VideoStatus.INVALID_URL.value
         assert res.action == "DROP_FROM_QUEUE"
+
+    @pytest.mark.asyncio
+    async def test_bulk_video_auditing(self, auditor):
+        from creative_pipeline.models.schemas import BulkVideoAuditRequest
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {"title": "Sample Title", "author_name": "Sample Author"}
+
+        with patch("httpx.AsyncClient.get", return_value=mock_resp):
+            req = BulkVideoAuditRequest(
+                video_urls=[
+                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "https://youtu.be/dQw4w9WgXcQ",
+                    "invalid_link_here",
+                ]
+            )
+            res = await auditor.audit_videos_bulk(req)
+            assert res.total_submitted == 3
+            assert res.ready_count == 2
+            assert res.dropped_count == 1
+            assert len(res.results) == 3
+
