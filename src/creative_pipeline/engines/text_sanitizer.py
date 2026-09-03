@@ -4,6 +4,8 @@ from typing import List, Optional, Set, Tuple
 
 from creative_pipeline.config import settings
 from creative_pipeline.models.schemas import (
+    BulkTextSanitizeRequest,
+    BulkTextSanitizeResponse,
     CreativeType,
     TextSanitizeRequest,
     TextSanitizeResponse,
@@ -268,3 +270,28 @@ class TextSanitizer:
             text = re.sub(r"[\s,:\-]+$", "", text).strip()
 
         return text
+
+    def sanitize_bulk(self, request: BulkTextSanitizeRequest) -> BulkTextSanitizeResponse:
+        """Sanitizes a batch of raw texts (e.g., pasted lines from an Excel or Google Sheets column)."""
+        results: List[TextSanitizeResponse] = []
+        for line in request.texts:
+            cleaned_line = line.strip()
+            if not cleaned_line:
+                continue
+            item_req = TextSanitizeRequest(
+                creative_type=request.creative_type,
+                text=cleaned_line,
+                preserve_acronyms=request.preserve_acronyms,
+                max_length=request.max_length,
+            )
+            results.append(self.sanitize(item_req))
+
+        compliant = sum(1 for r in results if r.valid)
+        modified = sum(1 for r in results if r.was_modified)
+
+        return BulkTextSanitizeResponse(
+            total_items=len(results),
+            compliant_items=compliant,
+            modified_items=modified,
+            results=results,
+        )

@@ -278,3 +278,41 @@ class TestAdditionalEdgeCases:
         res = sanitizer.sanitize(req)
         assert len(res.cleaned_text) <= 30
 
+
+class TestBulkTextSanitization:
+    def test_bulk_headlines_from_excel(self, sanitizer):
+        from creative_pipeline.models.schemas import BulkTextSanitizeRequest
+
+        raw_excel_rows = [
+            "PHOTO EDITOR #1 📸 BEST APP EVER!!!",
+            "Remove BG - Change Background",
+            "erase background online now at home",
+            "Free photo background changer",
+            "Automatic Background Removal",
+        ]
+        req = BulkTextSanitizeRequest(
+            creative_type=CreativeType.HEADLINE,
+            texts=raw_excel_rows,
+        )
+        res = sanitizer.sanitize_bulk(req)
+
+        assert res.total_items == 5
+        assert res.compliant_items == 5
+        # First row should be healed
+        assert res.results[0].cleaned_text == "Photo Editor 1 Best App Ever"
+        assert res.results[0].char_count <= 30
+        assert "📸" not in res.results[0].cleaned_text
+        assert "#" not in res.results[0].cleaned_text
+        # Every item must be compliant and <= 30 chars
+        for item in res.results:
+            assert len(item.cleaned_text) <= 30
+            assert item.valid is True
+
+    def test_bulk_skips_empty_lines(self, sanitizer):
+        from creative_pipeline.models.schemas import BulkTextSanitizeRequest
+
+        rows = ["Valid Headline", "  ", "", "\t", "Another Great Feature"]
+        req = BulkTextSanitizeRequest(creative_type=CreativeType.HEADLINE, texts=rows)
+        res = sanitizer.sanitize_bulk(req)
+        assert res.total_items == 2
+

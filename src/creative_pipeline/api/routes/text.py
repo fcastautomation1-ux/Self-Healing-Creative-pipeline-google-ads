@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends
 from creative_pipeline.api.deps import get_text_sanitizer
 from creative_pipeline.engines.text_sanitizer import TextSanitizer
 from creative_pipeline.models.schemas import (
+    BulkTextSanitizeRequest,
+    BulkTextSanitizeResponse,
     TextSanitizeRequest,
     TextSanitizeResponse,
 )
@@ -27,3 +29,16 @@ async def sanitize_text(
     - Trims intelligently at word boundaries without breaking words
     """
     return sanitizer.sanitize(request)
+
+
+@router.post(
+    "/bulk",
+    response_model=BulkTextSanitizeResponse,
+    summary="Bulk sanitize a list or column of headlines/descriptions copied from Excel",
+)
+async def sanitize_bulk_text(
+    request: BulkTextSanitizeRequest,
+    sanitizer: TextSanitizer = Depends(get_text_sanitizer),
+) -> BulkTextSanitizeResponse:
+    """Ingests multiple rows copied from an Excel or Google Sheets column and auto-fixes every line individually."""
+    return sanitizer.sanitize_bulk(request)

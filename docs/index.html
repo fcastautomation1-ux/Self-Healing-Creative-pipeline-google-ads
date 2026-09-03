@@ -146,13 +146,23 @@
           <!-- Quick Test Presets -->
           <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
             <span class="text-slate-500 font-medium">Try Presets:</span>
-            <button onclick="applyPreset(1)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">PHOTO EDITOR #1 📸 BEST APP EVER!!!</button>
-            <button onclick="applyPreset(2)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">🚀 50% Off Sale @ App Store! • Free Trial</button>
-            <button onclick="applyPreset(3)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">High Performance Photo Editor AI Tool</button>
+            <button onclick="applyPreset(1)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Single Headline</button>
+            <button onclick="applyPreset(2)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition">Single Description</button>
+            <button onclick="applyPreset(3)" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:hover:bg-emerald-900 dark:text-emerald-300 rounded-lg border border-emerald-300 dark:border-emerald-800 font-semibold transition">📊 Bulk Excel (5 Headlines)</button>
+            <button onclick="applyPreset(4)" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:hover:bg-emerald-900 dark:text-emerald-300 rounded-lg border border-emerald-300 dark:border-emerald-800 font-semibold transition">📊 Bulk Excel (4 Descriptions)</button>
+          </div>
+
+          <!-- Excel Bulk Active Banner -->
+          <div id="bulk-mode-banner" class="hidden mb-3 px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-medium flex items-center justify-between dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="sheet" class="w-4 h-4 text-indigo-600"></i>
+              <span><strong>Bulk Mode Detected:</strong> Healing each line as an individual Google Ads asset.</span>
+            </div>
+            <span id="bulk-rows-pill" class="font-mono font-bold bg-white dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-indigo-200 dark:border-indigo-800 text-[11px]">0 Rows</span>
           </div>
 
           <div class="relative">
-            <textarea id="raw-text-input" rows="5" class="w-full bg-slate-50/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-950 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 text-sm font-mono leading-relaxed transition" placeholder="Type or paste your raw headline or description copy here..."></textarea>
+            <textarea id="raw-text-input" rows="8" class="w-full bg-slate-50/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-950 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 text-sm font-mono leading-relaxed transition custom-scrollbar" placeholder="Paste a single copy OR paste an entire column copied from Excel / Google Sheets here...&#10;Each line will be healed into its own compliant asset!"></textarea>
             <div class="absolute bottom-3 right-3 flex items-center gap-2">
               <span id="char-counter" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium">0 / 30 chars</span>
             </div>
@@ -165,7 +175,7 @@
             </label>
             <button onclick="sanitizeTextAction()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-600/20 transition">
               <i data-lucide="wand-2" class="w-4 h-4"></i>
-              <span>Heal & Sanitize</span>
+              <span>Heal Copy</span>
             </button>
           </div>
         </div>
@@ -181,23 +191,71 @@
               <span id="validation-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">Awaiting Input</span>
             </div>
 
-            <div class="relative bg-emerald-50/40 dark:bg-slate-950 border border-emerald-200/80 dark:border-slate-800 rounded-xl p-4 min-h-[130px] flex flex-col justify-between transition">
-              <p id="cleaned-text-display" class="text-base sm:text-lg font-medium text-slate-900 dark:text-slate-100 tracking-normal break-words">Cleaned copy will appear here...</p>
-              <div class="mt-3 flex items-center justify-between pt-2 border-t border-emerald-100 dark:border-slate-900 text-xs font-mono">
-                <span id="output-char-count" class="text-slate-500 font-medium">0 characters</span>
-                <button onclick="copyCleanedText()" id="copy-btn" class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-indigo-600 dark:text-indigo-300 border border-slate-200 dark:border-slate-700 shadow-sm transition">
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                  <span id="copy-text">Copy</span>
-                </button>
+            <!-- SINGLE OUTPUT BOX (Displayed when 1 row) -->
+            <div id="single-output-box" class="block">
+              <div class="relative bg-emerald-50/40 dark:bg-slate-950 border border-emerald-200/80 dark:border-slate-800 rounded-xl p-4 min-h-[130px] flex flex-col justify-between transition">
+                <p id="cleaned-text-display" class="text-base sm:text-lg font-medium text-slate-900 dark:text-slate-100 tracking-normal break-words">Cleaned copy will appear here...</p>
+                <div class="mt-3 flex items-center justify-between pt-2 border-t border-emerald-100 dark:border-slate-900 text-xs font-mono">
+                  <span id="output-char-count" class="text-slate-500 font-medium">0 characters</span>
+                  <button onclick="copyCleanedText()" id="copy-btn" class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-indigo-600 dark:text-indigo-300 border border-slate-200 dark:border-slate-700 shadow-sm transition">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span id="copy-text">Copy</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Modifications Log -->
+              <div class="mt-5">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">Audit Log & Applied Remedies:</h3>
+                <ul id="modifications-list" class="space-y-2 text-xs">
+                  <li class="text-slate-400 italic">No modifications needed yet.</li>
+                </ul>
               </div>
             </div>
 
-            <!-- Modifications Log -->
-            <div class="mt-5">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">Audit Log & Applied Remedies:</h3>
-              <ul id="modifications-list" class="space-y-2 text-xs">
-                <li class="text-slate-400 italic">No modifications needed yet.</li>
-              </ul>
+            <!-- BULK OUTPUT BOX (Displayed when multiple rows pasted from Excel) -->
+            <div id="bulk-output-box" class="hidden">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-4 p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div>
+                  <span id="bulk-stats-summary" class="text-xs font-bold text-slate-800 dark:text-white">0 Rows Processed</span>
+                  <p class="text-[11px] text-slate-500">Every row healed individually to Google Ads standards.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="copyAllBulkCleaned()" id="copy-all-btn-text" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow transition">
+                    <i data-lucide="copy-check" class="w-3.5 h-3.5"></i>
+                    <span>Copy All Rows (Excel Ready)</span>
+                  </button>
+                  <button onclick="downloadBulkTextCsv()" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 transition" title="Export to CSV">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>CSV</span>
+                  </button>
+                  <button onclick="toggleBulkViewMode()" id="bulk-view-toggle-btn" class="px-2.5 py-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg font-mono">View: Raw</button>
+                </div>
+              </div>
+
+              <!-- Table View of Rows -->
+              <div id="bulk-table-container" class="max-h-[380px] overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950 custom-scrollbar shadow-sm">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase font-mono border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 backdrop-blur">
+                    <tr>
+                      <th class="py-2.5 px-3 w-12">#</th>
+                      <th class="py-2.5 px-3">Cleaned Asset</th>
+                      <th class="py-2.5 px-3 w-20">Length</th>
+                      <th class="py-2.5 px-3 w-24">Status</th>
+                      <th class="py-2.5 px-3">Applied Fixes</th>
+                      <th class="py-2.5 px-3 w-12 text-right">Copy</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bulk-text-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Raw Text View (Alternative for easy block copy) -->
+              <div id="bulk-raw-container" class="hidden">
+                <textarea id="bulk-raw-textarea" readonly rows="12" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-100 leading-relaxed custom-scrollbar select-all"></textarea>
+                <div class="mt-2 text-[11px] text-slate-500">Click inside, press Ctrl+A, then Ctrl+C to copy all clean lines directly back into your spreadsheet.</div>
+              </div>
             </div>
           </div>
 
@@ -590,20 +648,32 @@
       }
     }
 
-    // Live Char Counter
+    // Live Char / Rows Counter
     const rawInput = document.getElementById('raw-text-input');
     rawInput.addEventListener('input', updateCharCounter);
 
     function updateCharCounter() {
-      const len = rawInput.value.length;
+      const raw = rawInput.value;
+      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       const max = currentCreativeType === 'HEADLINE' ? 30 : 90;
       const counter = document.getElementById('char-counter');
-      counter.textContent = `${len} / ${max} chars`;
+      const bulkBanner = document.getElementById('bulk-mode-banner');
+      const bulkRowsPill = document.getElementById('bulk-rows-pill');
 
-      if (len > max) {
-        counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 font-bold border border-rose-300 dark:border-rose-800";
+      if (lines.length > 1) {
+        if (bulkBanner) bulkBanner.classList.remove('hidden');
+        if (bulkRowsPill) bulkRowsPill.textContent = `${lines.length} Rows`;
+        counter.textContent = `${lines.length} Rows (Excel Column • Max ${max}c/line)`;
+        counter.className = "text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800";
       } else {
-        counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium";
+        if (bulkBanner) bulkBanner.classList.add('hidden');
+        const len = raw.length;
+        counter.textContent = `${len} / ${max} chars`;
+        if (len > max) {
+          counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 font-bold border border-rose-300 dark:border-rose-800";
+        } else {
+          counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-medium";
+        }
       }
     }
 
@@ -616,8 +686,26 @@
         setCreativeType('DESCRIPTION');
         rawInput.value = "🚀 50% Off Sale @ App Store! • Free Trial for new users now at home...";
       } else if (num === 3) {
+        // Bulk Excel Headlines
         setCreativeType('HEADLINE');
-        rawInput.value = "High Performance Photo Editor AI Tool for Mobile";
+        rawInput.value = [
+          "PHOTO EDITOR #1 📸 BEST APP EVER!!!",
+          "Remove BG - Change Background",
+          "erase background online now at home",
+          "Free photo background changer",
+          "Automatic Background Removal",
+          "AI Photo Retouch & Filter Pro",
+          "Best Camera Effects & Stickers"
+        ].join('\n');
+      } else if (num === 4) {
+        // Bulk Excel Descriptions
+        setCreativeType('DESCRIPTION');
+        rawInput.value = [
+          "Download the #1 photo editor today! Fast, easy & 100% free trial for all creators...",
+          "Remove background with AI precision in seconds. High quality export guaranteed.",
+          "Transform your pictures into masterpieces with our advanced filters and 4K tools!",
+          "Create stunning collages and share instantly to Instagram and TikTok with ease."
+        ].join('\n');
       }
       updateCharCounter();
       sanitizeTextAction();
@@ -754,12 +842,29 @@
       };
     }
 
+    // App State for Bulk Output
+    let latestBulkResults = [];
+    let bulkViewIsRaw = false;
+
     function sanitizeTextAction() {
       const inputVal = rawInput.value;
       if (!inputVal.trim()) return;
 
       const preserveAcronyms = document.getElementById('preserve-acronyms-chk').checked;
-      const res = sanitizeTextCore(inputVal, currentCreativeType, preserveAcronyms);
+      const lines = inputVal.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+      if (lines.length > 1) {
+        renderBulkTextResults(lines, currentCreativeType, preserveAcronyms);
+      } else {
+        renderSingleTextResult(inputVal, currentCreativeType, preserveAcronyms);
+      }
+    }
+
+    function renderSingleTextResult(textVal, creativeType, preserveAcronyms) {
+      document.getElementById('bulk-output-box').classList.add('hidden');
+      document.getElementById('single-output-box').classList.remove('hidden');
+
+      const res = sanitizeTextCore(textVal, creativeType, preserveAcronyms);
 
       document.getElementById('cleaned-text-display').textContent = res.cleaned_text;
       document.getElementById('output-char-count').textContent = `${res.char_count} / ${res.max_allowed} chars`;
@@ -786,6 +891,133 @@
         });
         lucide.createIcons();
       }
+    }
+
+    function renderBulkTextResults(lines, creativeType, preserveAcronyms) {
+      document.getElementById('single-output-box').classList.add('hidden');
+      document.getElementById('bulk-output-box').classList.remove('hidden');
+
+      const results = lines.map(line => sanitizeTextCore(line, creativeType, preserveAcronyms));
+      latestBulkResults = results;
+
+      const totalCount = results.length;
+      const compliantCount = results.filter(r => r.valid).length;
+      const modifiedCount = results.filter(r => r.was_modified).length;
+
+      const badge = document.getElementById('validation-badge');
+      badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30";
+      badge.textContent = `All ${compliantCount}/${totalCount} Rows Compliant`;
+
+      document.getElementById('bulk-stats-summary').textContent = `${totalCount} Excel rows processed • ${modifiedCount} auto-healed • ${compliantCount} Google Ads ready`;
+
+      const tbody = document.getElementById('bulk-text-tbody');
+      tbody.innerHTML = '';
+
+      results.forEach((res, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900/60 transition";
+        const badgeColor = res.valid
+          ? (res.was_modified ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800" : "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800")
+          : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800";
+        const statusText = res.valid ? (res.was_modified ? "Healed" : "Clean") : "Trimmed";
+
+        const fixesText = res.modifications.length > 0
+          ? res.modifications.join('; ')
+          : '<span class="text-slate-400 italic">None</span>';
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono text-slate-400 text-xs">#${idx + 1}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-900 dark:text-white text-xs select-all">${escapeHtml(res.cleaned_text)}</td>
+          <td class="py-2.5 px-3 text-xs">
+            <span class="font-mono px-2 py-0.5 rounded text-[11px] font-medium ${res.char_count > res.max_allowed ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}">${res.char_count}/${res.max_allowed}</span>
+          </td>
+          <td class="py-2.5 px-3 text-xs">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">${statusText}</span>
+          </td>
+          <td class="py-2.5 px-3 text-xs text-slate-500 dark:text-slate-400 max-w-[180px] truncate" title="${res.modifications.join('; ')}">
+            ${fixesText}
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <button onclick="copySingleRow(${idx})" id="row-copy-${idx}" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-indigo-600 rounded-lg transition" title="Copy line">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update raw textarea
+      document.getElementById('bulk-raw-textarea').value = results.map(r => r.cleaned_text).join('\n');
+      lucide.createIcons();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function copyAllBulkCleaned() {
+      if (!latestBulkResults || latestBulkResults.length === 0) return;
+      const columnText = latestBulkResults.map(r => r.cleaned_text).join('\n');
+      navigator.clipboard.writeText(columnText).then(() => {
+        const btn = document.getElementById('copy-all-btn-text');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied Entire Column!</span>`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = `<i data-lucide="copy-check" class="w-3.5 h-3.5"></i><span>Copy All Rows (Excel Ready)</span>`;
+          lucide.createIcons();
+        }, 2500);
+      });
+    }
+
+    function downloadBulkTextCsv() {
+      if (!latestBulkResults || latestBulkResults.length === 0) return;
+      let csv = "data:text/csv;charset=utf-8,";
+      csv += "Row_Number,Cleaned_Text,Char_Count,Max_Allowed,Status,Applied_Fixes\r\n";
+      latestBulkResults.forEach((r, idx) => {
+        const clean = r.cleaned_text.replace(/"/g, '""');
+        const fixes = (r.modifications || []).join('; ').replace(/"/g, '""');
+        csv += `${idx + 1},"${clean}",${r.char_count},${r.max_allowed},"${r.valid ? 'COMPLIANT' : 'INVALID'}","${fixes}"\r\n`;
+      });
+      const encoded = encodeURI(csv);
+      const link = document.createElement("a");
+      link.setAttribute("href", encoded);
+      link.setAttribute("download", `cleaned_${currentCreativeType.toLowerCase()}_column.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function toggleBulkViewMode() {
+      bulkViewIsRaw = !bulkViewIsRaw;
+      const tableBox = document.getElementById('bulk-table-container');
+      const rawBox = document.getElementById('bulk-raw-container');
+      const btn = document.getElementById('bulk-view-toggle-btn');
+      if (bulkViewIsRaw) {
+        tableBox.classList.add('hidden');
+        rawBox.classList.remove('hidden');
+        btn.textContent = "View: Table";
+      } else {
+        tableBox.classList.remove('hidden');
+        rawBox.classList.add('hidden');
+        btn.textContent = "View: Raw";
+      }
+    }
+
+    function copySingleRow(idx) {
+      if (!latestBulkResults || !latestBulkResults[idx]) return;
+      const text = latestBulkResults[idx].cleaned_text;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById(`row-copy-${idx}`);
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i>`;
+          lucide.createIcons();
+        }, 1500);
+      });
     }
 
     function copyCleanedText() {

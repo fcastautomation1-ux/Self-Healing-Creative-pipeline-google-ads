@@ -61,6 +61,20 @@ class TextSanitizeResponse(BaseModel):
     max_allowed: int
 
 
+class BulkTextSanitizeRequest(BaseModel):
+    creative_type: CreativeType = Field(CreativeType.HEADLINE)
+    texts: List[str] = Field(..., description="List of raw texts or lines pasted from Excel")
+    preserve_acronyms: bool = Field(True, description="Whether to keep common acronyms uppercase")
+    max_length: Optional[int] = Field(None, description="Custom character limit override")
+
+
+class BulkTextSanitizeResponse(BaseModel):
+    total_items: int
+    compliant_items: int
+    modified_items: int
+    results: List[TextSanitizeResponse]
+
+
 # ---------------------------------------------------------------------------
 # Module 2: Image Processing Models
 # ---------------------------------------------------------------------------
