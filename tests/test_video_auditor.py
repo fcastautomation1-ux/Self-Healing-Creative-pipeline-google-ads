@@ -7,7 +7,7 @@ from creative_pipeline.models.schemas import VideoAuditRequest, VideoStatus
 
 @pytest.fixture
 def auditor():
-    return VideoAuditor(api_key=None)
+    return VideoAuditor()
 
 
 class TestVideoIdExtraction:
@@ -30,104 +30,12 @@ class TestVideoIdExtraction:
         assert auditor.extract_video_id("just some random text") is None
 
 
-class TestVideoAuditorApiMode:
+class TestPureCodeVideoAuditor:
     @pytest.mark.asyncio
-    async def test_api_public_and_embeddable(self):
-        auditor = VideoAuditor(api_key="mock_key")
-        mock_client = MagicMock()
-        mock_videos = MagicMock()
-        mock_list = MagicMock()
-        mock_list.execute.return_value = {
-            "items": [
-                {
-                    "id": "dQw4w9WgXcQ",
-                    "status": {"privacyStatus": "public", "embeddable": True},
-                }
-            ]
-        }
-        mock_videos.list.return_value = mock_list
-        mock_client.videos.return_value = mock_videos
-        auditor._youtube_client = mock_client
-
-        req = VideoAuditRequest(video_url="https://youtu.be/dQw4w9WgXcQ")
-        res = await auditor.audit_video(req)
-        assert res.is_usable is True
-        assert res.status == "PUBLIC"
-        assert res.action == "KEEP_IN_QUEUE"
-
-    @pytest.mark.asyncio
-    async def test_api_private_video(self):
-        auditor = VideoAuditor(api_key="mock_key")
-        mock_client = MagicMock()
-        mock_videos = MagicMock()
-        mock_list = MagicMock()
-        mock_list.execute.return_value = {
-            "items": [
-                {
-                    "id": "private12345",
-                    "status": {"privacyStatus": "private", "embeddable": True},
-                }
-            ]
-        }
-        mock_videos.list.return_value = mock_list
-        mock_client.videos.return_value = mock_videos
-        auditor._youtube_client = mock_client
-
-        req = VideoAuditRequest(video_url="https://youtu.be/private12345")
-        res = await auditor.audit_video(req)
-        assert res.is_usable is False
-        assert res.status == "PRIVATE"
-        assert res.action == "DROP_FROM_QUEUE"
-        assert "Private" in res.reason
-
-    @pytest.mark.asyncio
-    async def test_api_unembeddable_video(self):
-        auditor = VideoAuditor(api_key="mock_key")
-        mock_client = MagicMock()
-        mock_videos = MagicMock()
-        mock_list = MagicMock()
-        mock_list.execute.return_value = {
-            "items": [
-                {
-                    "id": "noembed1234",
-                    "status": {"privacyStatus": "public", "embeddable": False},
-                }
-            ]
-        }
-        mock_videos.list.return_value = mock_list
-        mock_client.videos.return_value = mock_videos
-        auditor._youtube_client = mock_client
-
-        req = VideoAuditRequest(video_url="https://youtu.be/noembed12345")
-        res = await auditor.audit_video(req)
-        assert res.is_usable is False
-        assert res.status == "NOT_EMBEDDABLE"
-        assert res.action == "DROP_FROM_QUEUE"
-
-    @pytest.mark.asyncio
-    async def test_api_not_found(self):
-        auditor = VideoAuditor(api_key="mock_key")
-        mock_client = MagicMock()
-        mock_videos = MagicMock()
-        mock_list = MagicMock()
-        mock_list.execute.return_value = {"items": []}
-        mock_videos.list.return_value = mock_list
-        mock_client.videos.return_value = mock_videos
-        auditor._youtube_client = mock_client
-
-        req = VideoAuditRequest(video_url="https://youtu.be/deleted1234")
-        res = await auditor.audit_video(req)
-        assert res.is_usable is False
-        assert res.status == "NOT_FOUND"
-        assert res.action == "DROP_FROM_QUEUE"
-
-
-class TestVideoAuditorOEmbedFallback:
-    @pytest.mark.asyncio
-    async def test_oembed_200_public(self, auditor):
+    async def test_oembed_200_public_success(self, auditor):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
-        mock_resp.json.return_value = {"title": "Cool Product Ad"}
+        mock_resp.json.return_value = {"title": "Google Ads Showcase Video"}
 
         with patch("httpx.AsyncClient.get", return_value=mock_resp):
             req = VideoAuditRequest(video_url="https://youtu.be/dQw4w9WgXcQ")
@@ -135,10 +43,10 @@ class TestVideoAuditorOEmbedFallback:
             assert res.is_usable is True
             assert res.status == "PUBLIC"
             assert res.action == "KEEP_IN_QUEUE"
-            assert "Cool Product Ad" in res.reason
+            assert "Google Ads Showcase Video" in res.reason
 
     @pytest.mark.asyncio
-    async def test_oembed_401_private(self, auditor):
+    async def test_oembed_401_private_detected(self, auditor):
         mock_resp = MagicMock()
         mock_resp.status_code = 401
 
@@ -150,7 +58,7 @@ class TestVideoAuditorOEmbedFallback:
             assert res.action == "DROP_FROM_QUEUE"
 
     @pytest.mark.asyncio
-    async def test_oembed_404_deleted(self, auditor):
+    async def test_oembed_404_deleted_detected(self, auditor):
         mock_resp = MagicMock()
         mock_resp.status_code = 404
 
@@ -160,6 +68,55 @@ class TestVideoAuditorOEmbedFallback:
             assert res.is_usable is False
             assert res.status == "DELETED"
             assert res.action == "DROP_FROM_QUEUE"
+
+    @pytest.mark.asyncio
+    async def test_html_player_response_private(self, auditor):
+        # When oEmbed fails or is skipped, fallback inspects HTML player response
+        mock_oembed = MagicMock()
+        mock_oembed.status_code = 500
+
+        mock_html = MagicMock()
+        mock_html.status_code = 200
+        mock_html.text = (
+            '<html><script>var ytInitialPlayerResponse = {"playabilityStatus": '
+            '{"status": "LOGIN_REQUIRED", "reason": "This video is private."}};</script></html>'
+        )
+
+        async def _mock_get(url, *args, **kwargs):
+            if "oembed" in url:
+                return mock_oembed
+            return mock_html
+
+        with patch("httpx.AsyncClient.get", side_effect=_mock_get):
+            req = VideoAuditRequest(video_url="https://youtu.be/priv1234567")
+            res = await auditor.audit_video(req)
+            assert res.is_usable is False
+            assert res.status == "PRIVATE"
+            assert res.action == "DROP_FROM_QUEUE"
+
+    @pytest.mark.asyncio
+    async def test_html_player_response_ok(self, auditor):
+        mock_oembed = MagicMock()
+        mock_oembed.status_code = 500
+
+        mock_html = MagicMock()
+        mock_html.status_code = 200
+        mock_html.text = (
+            '<html><script>var ytInitialPlayerResponse = {"playabilityStatus": '
+            '{"status": "OK"}};</script></html>'
+        )
+
+        async def _mock_get(url, *args, **kwargs):
+            if "oembed" in url:
+                return mock_oembed
+            return mock_html
+
+        with patch("httpx.AsyncClient.get", side_effect=_mock_get):
+            req = VideoAuditRequest(video_url="https://youtu.be/public12345")
+            res = await auditor.audit_video(req)
+            assert res.is_usable is True
+            assert res.status == "PUBLIC"
+            assert res.action == "KEEP_IN_QUEUE"
 
     @pytest.mark.asyncio
     async def test_invalid_url_drop(self, auditor):

@@ -77,9 +77,9 @@
           <i data-lucide="github" class="w-4 h-4"></i>
           <span class="hidden sm:inline">GitHub Repo</span>
         </a>
-        <button onclick="toggleApiModal()" class="flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition">
-          <i data-lucide="settings" class="w-4 h-4"></i>
-          <span>API Config</span>
+        <button onclick="toggleApiModal()" class="flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition">
+          <i data-lucide="code-2" class="w-4 h-4"></i>
+          <span>100% Pure Code</span>
         </button>
       </div>
     </div>
@@ -460,38 +460,42 @@
 
   </main>
 
-  <!-- API Modal -->
+  <!-- Pure Code Info Modal -->
   <div id="api-modal" class="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl transition-colors">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <i data-lucide="settings" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-          <span>Execution Mode & API Config</span>
+          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+          <span>100% Pure Code — Zero External APIs</span>
         </h3>
         <button onclick="toggleApiModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-        <strong>In-Browser Mode (Active):</strong> All copy auto-fixing, image cropping, and YouTube auditing run directly inside your browser with <strong>zero setup or API keys needed</strong>.
-      </p>
-      <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-        If you run the standalone Python / FastAPI microservice on your server, enter your backend endpoint below:
+        This tool is built with <strong>100% self-contained code</strong>. You do NOT need any Google Cloud keys, YouTube API keys, billing accounts, or paid third-party services:
       </p>
 
-      <div class="space-y-4 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Backend API Base URL</label>
-          <input type="text" id="api-base-url-input" value="http://localhost:8000" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 text-slate-900 dark:text-slate-200 font-mono focus:outline-none focus:border-indigo-600">
+      <div class="space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i>
+          <div><strong class="text-slate-900 dark:text-white">Copy Doctor:</strong> Pure regex & Unicode planes string manipulation for symbols, emojis, and capitalization.</div>
         </div>
-        <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
-          <span class="text-indigo-600 dark:text-indigo-400 font-bold">Local Python Backend Startup:</span>
-          <pre class="mt-1 p-2 bg-slate-100 dark:bg-slate-900 rounded font-mono text-slate-800 dark:text-slate-300 overflow-x-auto">uv run uvicorn creative_pipeline.main:app --port 8000</pre>
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i>
+          <div><strong class="text-slate-900 dark:text-white">Smart Visual Engine:</strong> Pure HTML5 Canvas / Pillow & OpenCV local saliency gradient energy calculations.</div>
+        </div>
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i>
+          <div><strong class="text-slate-900 dark:text-white">Video Health Auditor:</strong> Pure code HTTP status inspection & public oEmbed protocol (zero API keys).</div>
+        </div>
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i>
+          <div><strong class="text-slate-900 dark:text-white">Batch & CSV Engine:</strong> 100% Client/Python native CSV parsing & export.</div>
         </div>
       </div>
 
-      <div class="mt-6 flex justify-end gap-2">
-        <button onclick="toggleApiModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold transition">Close</button>
-        <button onclick="saveApiUrl()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition">Save & Apply</button>
+      <div class="mt-6 flex justify-end">
+        <button onclick="toggleApiModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow transition">Got It!</button>
       </div>
     </div>
   </div>

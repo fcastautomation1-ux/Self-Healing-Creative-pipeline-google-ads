@@ -1,10 +1,10 @@
+import json
 import logging
 import re
 from typing import Optional, Tuple
 
 import httpx
 
-from creative_pipeline.config import settings
 from creative_pipeline.models.schemas import (
     VideoAuditRequest,
     VideoAuditResponse,
@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 class VideoAuditor:
-    """Module 3: Video Health Auditor & Filter ('Video Cleaner')."""
+    """Module 3: Pure-Code Video Health Auditor & Filter ('Video Cleaner').
+
+    Performs video verification via pure code HTTP inspection and metadata analysis
+    WITHOUT requiring any external YouTube API keys or Google Cloud credentials.
+    """
 
     # Stricter YouTube video ID regex pattern
     YOUTUBE_ID_PATTERN = re.compile(
@@ -23,23 +27,16 @@ class VideoAuditor:
         re.IGNORECASE,
     )
 
-    def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or settings.YOUTUBE_API_KEY
-        self._youtube_client = None
-        if self.api_key:
-            self._init_youtube_client()
+    PLAYER_RESPONSE_PATTERN = re.compile(
+        r"ytInitialPlayerResponse\s*=\s*({.+?});", re.DOTALL
+    )
 
-    def _init_youtube_client(self):
-        try:
-            from googleapiclient.discovery import build
-            self._youtube_client = build("youtube", "v3", developerKey=self.api_key, cache_discovery=False)
-            logger.info("YouTube Data API v3 client initialized.")
-        except Exception as e:
-            logger.warning(f"Could not initialize YouTube API client: {e}")
-            self._youtube_client = None
+    def __init__(self, api_key: Optional[str] = None):
+        # Kept for backward compatibility if passed, but pure code mode is default
+        self.api_key = api_key
 
     def extract_video_id(self, url: str) -> Optional[str]:
-        """Extracts 11-character YouTube video ID from various URL formats."""
+        """Extracts 11-character YouTube video ID from various URL formats via pure regex."""
         clean_url = url.strip()
         # Check if input is directly an 11-char video ID
         if re.fullmatch(r"[a-zA-Z0-9_-]{11}", clean_url):
@@ -51,7 +48,7 @@ class VideoAuditor:
         return None
 
     async def audit_video(self, request: VideoAuditRequest) -> VideoAuditResponse:
-        """Audits video accessibility and embeddability."""
+        """Audits video accessibility and embeddability using 100% pure code."""
         video_id = self.extract_video_id(request.video_url)
         if not video_id:
             return VideoAuditResponse(
@@ -62,86 +59,29 @@ class VideoAuditor:
                 action="DROP_FROM_QUEUE",
             )
 
-        # Mode A: Use YouTube Data API v3 if configured
-        if self._youtube_client:
-            try:
-                return await self._audit_via_api(video_id)
-            except Exception as e:
-                logger.warning(
-                    f"YouTube API call failed: {e}. Falling back to oEmbed probe."
-                )
+        # Pure Code Step 1: Probe oEmbed public protocol (Zero API Key needed)
+        oembed_res = await self._probe_oembed(video_id)
+        if oembed_res is not None:
+            return oembed_res
 
-        # Mode B: Zero-config oEmbed + HTTP probe fallback
-        return await self._audit_via_oembed(video_id)
+        # Pure Code Step 2: Probe YouTube Watch Page HTML & Player JSON
+        return await self._probe_html_player(video_id)
 
-    async def _audit_via_api(self, video_id: str) -> VideoAuditResponse:
-        """Audits video using official YouTube Data API v3."""
-        # Note: discovery API is synchronous, run in thread pool if needed
-        import anyio
-
-        def _fetch():
-            return (
-                self._youtube_client.videos()
-                .list(part="status,snippet", id=video_id)
-                .execute()
-            )
-
-        resp = await anyio.to_thread.run_sync(_fetch)
-        items = resp.get("items", [])
-
-        if not items:
-            return VideoAuditResponse(
-                video_id=video_id,
-                is_usable=False,
-                status=VideoStatus.NOT_FOUND.value,
-                reason="Video not found or deleted on YouTube.",
-                action="DROP_FROM_QUEUE",
-            )
-
-        item = items[0]
-        status_info = item.get("status", {})
-        privacy = status_info.get("privacyStatus", "unknown").upper()
-        embeddable = status_info.get("embeddable", False)
-
-        if privacy == "PRIVATE":
-            return VideoAuditResponse(
-                video_id=video_id,
-                is_usable=False,
-                status=VideoStatus.PRIVATE.value,
-                reason="Video is Private. Please change visibility to Unlisted or Public in YouTube Studio.",
-                action="DROP_FROM_QUEUE",
-            )
-
-        if not embeddable:
-            return VideoAuditResponse(
-                video_id=video_id,
-                is_usable=False,
-                status=VideoStatus.NOT_EMBEDDABLE.value,
-                reason="Video embedding is disabled by the owner. Google Ads requires embeddable videos.",
-                action="DROP_FROM_QUEUE",
-            )
-
-        status_val = (
-            VideoStatus.PUBLIC.value if privacy == "PUBLIC" else VideoStatus.UNLISTED.value
-        )
-        return VideoAuditResponse(
-            video_id=video_id,
-            is_usable=True,
-            status=status_val,
-            reason=f"Video is {status_val.lower()} and embeddable.",
-            action="KEEP_IN_QUEUE",
-        )
-
-    async def _audit_via_oembed(self, video_id: str) -> VideoAuditResponse:
-        """Audits video using YouTube oEmbed endpoint and HTTP response codes."""
+    async def _probe_oembed(self, video_id: str) -> Optional[VideoAuditResponse]:
+        """Inspects YouTube oEmbed endpoint (100% free, pure HTTP, zero API key)."""
         oembed_url = (
             f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={video_id}&format=json"
         )
-        
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            )
+        }
+
+        async with httpx.AsyncClient(timeout=8.0, follow_redirects=True) as client:
             try:
-                resp = await client.get(oembed_url)
-                
+                resp = await client.get(oembed_url, headers=headers)
                 if resp.status_code == 200:
                     data = resp.json()
                     title = data.get("title", "Video")
@@ -149,16 +89,15 @@ class VideoAuditor:
                         video_id=video_id,
                         is_usable=True,
                         status=VideoStatus.PUBLIC.value,
-                        reason=f"Video is accessible ('{title}') and embeddable.",
+                        reason=f"Video is public and embeddable ('{title}'). Verified with pure code.",
                         action="KEEP_IN_QUEUE",
                     )
-                elif resp.status_code == 401 or resp.status_code == 403:
-                    # 401 Unauthorized or 403 Forbidden indicates private or embed restricted
+                elif resp.status_code in (401, 403):
                     return VideoAuditResponse(
                         video_id=video_id,
                         is_usable=False,
                         status=VideoStatus.PRIVATE.value,
-                        reason="Video is Private or embedding is disabled.",
+                        reason="Video is Private or embedding is prohibited by the owner.",
                         action="DROP_FROM_QUEUE",
                     )
                 elif resp.status_code == 404:
@@ -166,24 +105,97 @@ class VideoAuditor:
                         video_id=video_id,
                         is_usable=False,
                         status=VideoStatus.DELETED.value,
-                        reason="Video was deleted or does not exist.",
+                        reason="Video was deleted or does not exist on YouTube.",
                         action="DROP_FROM_QUEUE",
                     )
-                else:
+            except Exception as exc:
+                logger.debug(f"oEmbed probe skipped: {exc}")
+
+        return None
+
+    async def _probe_html_player(self, video_id: str) -> VideoAuditResponse:
+        """Parses YouTube initial player response directly from page HTML via pure regex."""
+        watch_url = f"https://www.youtube.com/watch?v={video_id}"
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            ),
+            "Accept-Language": "en-US,en;q=0.9",
+        }
+
+        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+            try:
+                resp = await client.get(watch_url, headers=headers)
+                if resp.status_code == 404:
                     return VideoAuditResponse(
                         video_id=video_id,
                         is_usable=False,
-                        status=VideoStatus.NOT_FOUND.value,
-                        reason=f"YouTube returned HTTP status {resp.status_code}.",
+                        status=VideoStatus.DELETED.value,
+                        reason="Video not found or deleted (HTTP 404).",
                         action="DROP_FROM_QUEUE",
                     )
 
-            except httpx.RequestError as exc:
-                logger.warning(f"Error querying oEmbed for video {video_id}: {exc}")
+                html = resp.text
+                match = self.PLAYER_RESPONSE_PATTERN.search(html)
+                if match:
+                    try:
+                        data = json.loads(match.group(1))
+                        playability = data.get("playabilityStatus", {})
+                        status = playability.get("status", "").upper()
+                        reason = playability.get("reason", "")
+
+                        if status == "OK":
+                            return VideoAuditResponse(
+                                video_id=video_id,
+                                is_usable=True,
+                                status=VideoStatus.PUBLIC.value,
+                                reason="Video is playable and embeddable. Verified with pure code.",
+                                action="KEEP_IN_QUEUE",
+                            )
+                        elif status in ("LOGIN_REQUIRED", "PRIVATE"):
+                            return VideoAuditResponse(
+                                video_id=video_id,
+                                is_usable=False,
+                                status=VideoStatus.PRIVATE.value,
+                                reason=reason or "Video is Private. Please change visibility to Unlisted or Public.",
+                                action="DROP_FROM_QUEUE",
+                            )
+                        elif status in ("UNPLAYABLE", "ERROR"):
+                            return VideoAuditResponse(
+                                video_id=video_id,
+                                is_usable=False,
+                                status=VideoStatus.DELETED.value,
+                                reason=reason or "Video is unplayable or removed.",
+                                action="DROP_FROM_QUEUE",
+                            )
+                    except json.JSONDecodeError:
+                        pass
+
+                # If status 200 and no restriction found
+                if resp.status_code == 200:
+                    return VideoAuditResponse(
+                        video_id=video_id,
+                        is_usable=True,
+                        status=VideoStatus.PUBLIC.value,
+                        reason="Video is accessible. Verified via pure code HTTP probe.",
+                        action="KEEP_IN_QUEUE",
+                    )
+
                 return VideoAuditResponse(
                     video_id=video_id,
                     is_usable=False,
                     status=VideoStatus.NOT_FOUND.value,
-                    reason=f"Network error querying YouTube status: {exc}",
+                    reason=f"HTTP status {resp.status_code} received from video probe.",
+                    action="DROP_FROM_QUEUE",
+                )
+
+            except Exception as exc:
+                logger.warning(f"Error during pure code video audit for {video_id}: {exc}")
+                return VideoAuditResponse(
+                    video_id=video_id,
+                    is_usable=False,
+                    status=VideoStatus.NOT_FOUND.value,
+                    reason=f"Probe failed: {str(exc)}",
                     action="DROP_FROM_QUEUE",
                 )

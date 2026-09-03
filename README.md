@@ -2,11 +2,13 @@
 ### *Autonomous Google Ads Asset Validator, Auto-Corrector, Smart Cropper & Filter Microservice*
 
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge&logo=github)](https://fcastautomation1-ux.github.io/Self-Healing-Creative-pipeline-google-ads/)
+[![Pure Code](https://img.shields.io/badge/Zero%20External%20APIs-100%25%20Pure%20Code-brightgreen?style=for-the-badge)](https://fcastautomation1-ux.github.io/Self-Healing-Creative-pipeline-google-ads/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=for-the-badge&logo=docker)](https://www.docker.com/)
 
-> 🌐 **Interactive Web App (Free for Everyone)**:  
+> ⚡ **100% Pure Code — Zero Third-Party APIs or Cloud Keys Required!**  
+> Everything runs entirely with local algorithms (regex, unicode, HTML5 Canvas, Pillow/OpenCV, native HTTP probing). No Google Cloud keys, no YouTube API tokens, and no paid services are needed.  
 > 👉 **[Launch Live Web Application](https://fcastautomation1-ux.github.io/Self-Healing-Creative-pipeline-google-ads/)**
 
 ---
