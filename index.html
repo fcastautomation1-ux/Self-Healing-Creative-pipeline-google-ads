@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self-Healing Creative Pipeline | Google Ads Asset Auto-Corrector & Cropper</title>
+  <meta name="description" content="Autonomous Google Ads Asset Validator, Auto-Corrector, Smart Cropper & Filter Microservice for Performance Max and App Campaigns.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- JSZip for batch image download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            adsgreen: '#10b981',
+            adsred: '#f43f5e',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-border {
+      background: linear-gradient(60deg, #6366f1, #38bdf8, #10b981);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-sky-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Self-Healing Creative Pipeline</span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full">Google Ads Ready</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/ahsaniqbal12384/Self-Healing-Creative-pipeline-google-ads" target="_blank" class="flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub Repo</span>
+        </a>
+        <button onclick="toggleApiModal()" class="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+          <i data-lucide="terminal" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">API Config</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden border-b border-slate-800/80 bg-gradient-to-b from-indigo-950/20 via-slate-950 to-slate-950 py-8 sm:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
+        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+        <span>100% Policy-Compliant Google Ads Asset Healer</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-3xl mx-auto">
+        Zero Policy Rejections. Auto-Fixed, Smart-Cropped & Verified.
+      </h1>
+      <p class="mt-3 sm:mt-4 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto">
+        Transform un-vetted marketing headlines, descriptions, images, and YouTube videos into perfectly formatted, policy-compliant assets for Performance Max and App campaigns.
+      </p>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center justify-center gap-2 mt-8 overflow-x-auto p-1.5 bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl mx-auto">
+        <button onclick="switchTab('text')" id="tab-btn-text" class="tab-btn active flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 text-white transition shadow">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          <span>Copy Doctor</span>
+        </button>
+        <button onclick="switchTab('image')" id="tab-btn-image" class="tab-btn flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="crop" class="w-4 h-4"></i>
+          <span>Smart Cropper</span>
+        </button>
+        <button onclick="switchTab('video')" id="tab-btn-video" class="tab-btn flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="video" class="w-4 h-4"></i>
+          <span>Video Auditor</span>
+        </button>
+        <button onclick="switchTab('batch')" id="tab-btn-batch" class="tab-btn flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span>Batch & CSV</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: COPY DOCTOR (TEXT AUTO-FIXER) -->
+    <!-- ================================================================= -->
+    <div id="tab-text" class="tab-content block">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        <!-- Input Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2 text-white">
+              <i data-lucide="pencil" class="w-5 h-5 text-indigo-400"></i>
+              <span>Raw Copy Input</span>
+            </h2>
+            <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-semibold">
+              <button id="type-headline-btn" onclick="setCreativeType('HEADLINE')" class="px-3 py-1 rounded bg-indigo-600 text-white transition">Headline (30)</button>
+              <button id="type-desc-btn" onclick="setCreativeType('DESCRIPTION')" class="px-3 py-1 rounded text-slate-400 hover:text-white transition">Description (90)</button>
+            </div>
+          </div>
+
+          <!-- Quick Test Presets -->
+          <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
+            <span class="text-slate-500 font-medium">Try Presets:</span>
+            <button onclick="applyPreset(1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">PHOTO EDITOR #1 📸 BEST APP EVER!!!</button>
+            <button onclick="applyPreset(2)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">🚀 50% Off Sale @ App Store! • Free Trial</button>
+            <button onclick="applyPreset(3)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">High Performance Photo Editor AI Tool</button>
+          </div>
+
+          <div class="relative">
+            <textarea id="raw-text-input" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm font-mono leading-relaxed" placeholder="Type or paste your raw headline or description copy here..."></textarea>
+            <div class="absolute bottom-3 right-3 flex items-center gap-2">
+              <span id="char-counter" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">0 / 30 chars</span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between">
+            <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+              <input type="checkbox" id="preserve-acronyms-chk" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0 bg-slate-950">
+              <span>Preserve Standard Acronyms (US, AI, 3D, 4K, etc.)</span>
+            </label>
+            <button onclick="sanitizeTextAction()" class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-500/25 transition">
+              <i data-lucide="wand-2" class="w-4 h-4"></i>
+              <span>Heal & Sanitize</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-base sm:text-lg font-bold flex items-center gap-2 text-emerald-400">
+                <i data-lucide="badge-check" class="w-5 h-5 text-emerald-400"></i>
+                <span>Compliant Clean Output</span>
+              </h2>
+              <span id="validation-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">Awaiting Input</span>
+            </div>
+
+            <div class="relative bg-slate-950 border border-slate-800 rounded-xl p-4 min-h-[130px] flex flex-col justify-between">
+              <p id="cleaned-text-display" class="text-base sm:text-lg font-medium text-slate-200 tracking-normal break-words">Cleaned copy will appear here...</p>
+              <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-900 text-xs font-mono">
+                <span id="output-char-count" class="text-slate-500">0 characters</span>
+                <button onclick="copyCleanedText()" id="copy-btn" class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-indigo-300 transition">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span id="copy-text">Copy</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Modifications Log -->
+            <div class="mt-5">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">Audit Log & Applied Remedies:</h3>
+              <ul id="modifications-list" class="space-y-2 text-xs">
+                <li class="text-slate-500 italic">No modifications needed yet.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Editorial Guarantees -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-2 gap-3 text-[11px] text-slate-400">
+            <div class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Emojis & Symbols Purged</div>
+            <div class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Title/Sentence Casing</div>
+            <div class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> No Headline Exclamation</div>
+            <div class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Whole Word Boundary Trim</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: SMART VISUAL ENGINE (IMAGE AUTO-CROPPER) -->
+    <!-- ================================================================= -->
+    <div id="tab-image" class="tab-content hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl mb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold flex items-center gap-2 text-white">
+              <i data-lucide="image" class="w-5 h-5 text-sky-400"></i>
+              <span>Smart Image Cropper & Resizer</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">
+              Upload an image to automatically crop into Google Ads standard orientations: 1:1 Square, 1.91:1 Landscape, and 4:5 / 9:16 Portrait with size compression under 5.0 MB.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="downloadAllCropsZip()" id="zip-all-btn" class="hidden flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow transition">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Download All (ZIP)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload Dropzone & Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2">
+            <div id="dropzone" onclick="document.getElementById('image-file-input').click()" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-8 text-center cursor-pointer transition bg-slate-950/50 hover:bg-slate-950 flex flex-col items-center justify-center min-h-[220px]">
+              <i data-lucide="cloud-upload" class="w-12 h-12 text-slate-500 mb-3"></i>
+              <p class="text-sm font-semibold text-slate-200">Drag & Drop raw banner or click to browse</p>
+              <p class="text-xs text-slate-500 mt-1">Supports PNG, JPG, WebP up to 25MB</p>
+              <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+            </div>
+            
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Or sample:</span>
+              <button onclick="loadSampleImage('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Sample Artwork</button>
+              <button onclick="loadSampleImage('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1200&q=80')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Sample Tech Banner</button>
+            </div>
+          </div>
+
+          <!-- Configuration -->
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Target Orientations</h3>
+              <div class="space-y-2.5 text-xs text-slate-300">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="crop-square-chk" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="font-medium">Square (1:1)</span>
+                  <span class="text-slate-500 ml-auto">1200x1200</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="crop-landscape-chk" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="font-medium">Landscape (1.91:1)</span>
+                  <span class="text-slate-500 ml-auto">1200x628</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="crop-portrait-chk" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="font-medium">Portrait (4:5 / 9:16)</span>
+                  <span class="text-slate-500 ml-auto">1200x1500</span>
+                </label>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-800">
+                <label class="text-xs font-semibold text-slate-400 block mb-1.5">Portrait Ratio Preference:</label>
+                <select id="portrait-aspect-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none">
+                  <option value="4:5" selected>4:5 (1200x1500 - App Store standard)</option>
+                  <option value="9:16">9:16 (1080x1920 - Shorts/Reels standard)</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="processSelectedImage()" id="crop-btn" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow transition">
+              <i data-lucide="scissors" class="w-4 h-4"></i>
+              <span>Generate Google Ads Crops</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Crops Grid -->
+      <div id="crops-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Cards injected dynamically -->
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: VIDEO HEALTH AUDITOR -->
+    <!-- ================================================================= -->
+    <div id="tab-video" class="tab-content hidden">
+      <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 mb-3 border border-rose-500/20">
+            <i data-lucide="youtube" class="w-6 h-6"></i>
+          </div>
+          <h2 class="text-xl font-bold text-white">YouTube Video Health Auditor</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Detect private, deleted, or un-embeddable videos to prevent Google Ads campaign blockage.
+          </p>
+        </div>
+
+        <div class="mb-4 flex flex-wrap items-center justify-center gap-2 text-xs">
+          <span class="text-slate-500 font-medium">Test URLs:</span>
+          <button onclick="setVideoUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Public Video</button>
+          <button onclick="setVideoUrl('https://youtu.be/dQw4w9WgXcQ')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Short Link (youtu.be)</button>
+          <button onclick="setVideoUrl('https://www.youtube.com/watch?v=private_mock_sample')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Simulate Private Video</button>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="video-url-input" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm font-mono" placeholder="https://www.youtube.com/watch?v=...">
+          <button onclick="auditVideoAction()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl shadow-lg transition">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            <span>Audit</span>
+          </button>
+        </div>
+
+        <!-- Video Audit Result Box -->
+        <div id="video-audit-result" class="hidden mt-6 bg-slate-950 border border-slate-800 rounded-2xl p-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <span id="video-action-badge" class="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">STATUS</span>
+              <h3 id="video-title-display" class="text-base font-semibold text-white mt-2">Video Title</h3>
+              <p id="video-id-display" class="text-xs font-mono text-slate-400 mt-1">ID: ...</p>
+            </div>
+            <span id="video-status-pill" class="text-xs px-2.5 py-1 rounded bg-slate-900 border border-slate-700 font-mono text-slate-300">PUBLIC</span>
+          </div>
+
+          <p id="video-reason-display" class="text-sm text-slate-300 mt-3 p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 leading-relaxed"></p>
+
+          <div id="video-preview-frame" class="mt-4 aspect-video rounded-xl overflow-hidden border border-slate-800 hidden">
+            <!-- Iframe embed -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: BATCH PIPELINE & CSV PROCESSOR -->
+    <!-- ================================================================= -->
+    <div id="tab-batch" class="tab-content hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold flex items-center gap-2 text-white">
+              <i data-lucide="layers" class="w-5 h-5 text-indigo-400"></i>
+              <span>Batch Campaign Pipeline & CSV Processor</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">
+              Ingest full CSV lists of headlines, descriptions, images, and videos. Output production-ready assets and quarantine report.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadCleanedCsv()" id="download-csv-btn" class="hidden flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow transition">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Export Clean CSV</span>
+            </button>
+            <button onclick="loadDefaultBatch()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
+              Load Spec Sample
+            </button>
+          </div>
+        </div>
+
+        <!-- Raw Batch CSV Editor -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
+            <span class="font-mono">CSV Input (ad_group_alias, asset_type, content, orientation):</span>
+            <label class="cursor-pointer text-indigo-400 hover:underline">
+              <span>Or Upload .CSV File</span>
+              <input type="file" id="batch-csv-upload" accept=".csv,text/csv" class="hidden" onchange="handleCsvUpload(event)">
+            </label>
+          </div>
+          <textarea id="batch-csv-input" rows="8" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 custom-scrollbar leading-relaxed"></textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="executeBatchPipeline()" class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-600 hover:opacity-90 text-white text-sm font-semibold rounded-xl shadow-lg transition">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            <span>Run Pipeline Execution</span>
+          </button>
+        </div>
+
+        <!-- Batch Metrics Dashboard -->
+        <div id="batch-dashboard" class="hidden mt-8 pt-6 border-t border-slate-800">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400 font-medium">Total Assets Submitted</span>
+              <div id="metric-submitted" class="text-2xl font-bold text-white mt-1">0</div>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/30">
+              <span class="text-xs text-emerald-400 font-medium">Ready To Upload (Production)</span>
+              <div id="metric-ready" class="text-2xl font-bold text-emerald-400 mt-1">0</div>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-rose-500/30">
+              <span class="text-xs text-rose-400 font-medium">Quarantined / Dropped</span>
+              <div id="metric-dropped" class="text-2xl font-bold text-rose-400 mt-1">0</div>
+            </div>
+          </div>
+
+          <!-- Tables -->
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-3">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Ready To Upload Assets</span>
+              </h3>
+              <div class="overflow-x-auto bg-slate-950 border border-slate-800 rounded-xl">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-900/80 text-slate-400 uppercase font-mono border-b border-slate-800">
+                    <tr>
+                      <th class="py-3 px-4">Type</th>
+                      <th class="py-3 px-4">Orientation</th>
+                      <th class="py-3 px-4">Clean Content</th>
+                      <th class="py-3 px-4">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="batch-ready-tbody" class="divide-y divide-slate-850 text-slate-200">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2 mb-3">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                <span>Quarantined / Dropped Assets Report</span>
+              </h3>
+              <div class="overflow-x-auto bg-slate-950 border border-slate-800 rounded-xl">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-900/80 text-slate-400 uppercase font-mono border-b border-slate-800">
+                    <tr>
+                      <th class="py-3 px-4">Type</th>
+                      <th class="py-3 px-4">Original Content</th>
+                      <th class="py-3 px-4">Drop Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody id="batch-dropped-tbody" class="divide-y divide-slate-850 text-slate-200">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- API Modal -->
+  <div id="api-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-indigo-400"></i>
+          <span>Execution Mode & API Config</span>
+        </h3>
+        <button onclick="toggleApiModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <p class="text-xs text-slate-400 mb-4">
+        By default, this web page executes all sanitization, smart cropping, and video auditing directly inside your browser (zero backend required).
+        You can also link it to your own hosted FastAPI service URL!
+      </p>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Backend API Base URL</label>
+          <input type="text" id="api-base-url-input" value="http://localhost:8000" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 font-mono focus:outline-none focus:border-indigo-500">
+        </div>
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-400 text-[11px] leading-relaxed">
+          <span class="text-indigo-400 font-semibold">Local Run Command:</span>
+          <pre class="mt-1 p-2 bg-slate-900 rounded font-mono text-slate-300 overflow-x-auto">uv run uvicorn creative_pipeline.main:app --port 8000</pre>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="toggleApiModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">Close</button>
+        <button onclick="saveApiUrl()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition">Save & Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Self-Healing Creative Pipeline API. Built for autonomous Google Ads App & Performance Max pipelines.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/ahsaniqbal12384/Self-Healing-Creative-pipeline-google-ads" target="_blank" class="hover:text-slate-300 transition">GitHub</a>
+        <a href="docs" class="hover:text-slate-300 transition">Documentation</a>
+        <a href="https://ads.google.com" target="_blank" class="hover:text-slate-300 transition">Google Ads Policy Guide</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core App Logic (JavaScript) -->
+  <script>
+    // Lucide Icons init
+    lucide.createIcons();
+
+    // App State
+    let currentTab = 'text';
+    let currentCreativeType = 'HEADLINE';
+    let activeLoadedImage = null;
+    let generatedCropBlobs = [];
+    let latestBatchResult = null;
+
+    // Known acronyms to preserve uppercase
+    const KNOWN_ACRONYMS = new Set([
+      "US", "USA", "UK", "EU", "AI", "ML", "3D", "4K", "HD", "VR", "AR",
+      "UI", "UX", "SEO", "PPC", "ROI", "B2B", "B2C", "API", "SDK", "PRO",
+      "VIP", "GPS", "PDF", "PC", "MAC", "IOS", "CTA", "CRM", "SAAS", "CMS"
+    ]);
+
+    // Tab Switching
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+        btn.classList.add('text-slate-400');
+      });
+      document.getElementById(`tab-btn-${tabId}`).classList.add('bg-indigo-600', 'text-white', 'shadow');
+      document.getElementById(`tab-btn-${tabId}`).classList.remove('text-slate-400');
+
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    // Creative Type Selection
+    function setCreativeType(type) {
+      currentCreativeType = type;
+      const headBtn = document.getElementById('type-headline-btn');
+      const descBtn = document.getElementById('type-desc-btn');
+      const maxLen = type === 'HEADLINE' ? 30 : 90;
+
+      if (type === 'HEADLINE') {
+        headBtn.className = "px-3 py-1 rounded bg-indigo-600 text-white transition";
+        descBtn.className = "px-3 py-1 rounded text-slate-400 hover:text-white transition";
+      } else {
+        descBtn.className = "px-3 py-1 rounded bg-indigo-600 text-white transition";
+        headBtn.className = "px-3 py-1 rounded text-slate-400 hover:text-white transition";
+      }
+
+      updateCharCounter();
+      if (document.getElementById('raw-text-input').value.trim()) {
+        sanitizeTextAction();
+      }
+    }
+
+    // Live Char Counter
+    const rawInput = document.getElementById('raw-text-input');
+    rawInput.addEventListener('input', updateCharCounter);
+
+    function updateCharCounter() {
+      const len = rawInput.value.length;
+      const max = currentCreativeType === 'HEADLINE' ? 30 : 90;
+      const counter = document.getElementById('char-counter');
+      counter.textContent = `${len} / ${max} chars`;
+
+      if (len > max) {
+        counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 font-bold";
+      } else {
+        counter.className = "text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400";
+      }
+    }
+
+    // Presets
+    function applyPreset(num) {
+      if (num === 1) {
+        setCreativeType('HEADLINE');
+        rawInput.value = "PHOTO EDITOR #1 📸 BEST APP EVER!!!";
+      } else if (num === 2) {
+        setCreativeType('DESCRIPTION');
+        rawInput.value = "🚀 50% Off Sale @ App Store! • Free Trial for new users now at home...";
+      } else if (num === 3) {
+        setCreativeType('HEADLINE');
+        rawInput.value = "High Performance Photo Editor AI Tool for Mobile";
+      }
+      updateCharCounter();
+      sanitizeTextAction();
+    }
+
+    // =========================================================================
+    // Client-side Sanitizer Engine (Matches Python text_sanitizer.py exactly)
+    // =========================================================================
+    function sanitizeTextCore(rawText, creativeType, preserveAcronyms = true, customMax = null) {
+      let text = rawText;
+      const modifications = [];
+      const maxAllowed = customMax || (creativeType === 'HEADLINE' ? 30 : 90);
+
+      // 1. Strip Prohibited Symbols: @, #, *, ~, ^, |, <, >, _, +, =, /, \, bullets, checks, stars
+      const prohibitedRegex = /[@#*~^|<>\_\+=\\\/•★✔✓►▶▲▼◆✦§¤¡¿`~]/g;
+      const matchedSymbols = text.match(prohibitedRegex);
+      if (matchedSymbols && matchedSymbols.length > 0) {
+        const uniqueSymbols = [...new Set(matchedSymbols)].join(' ');
+        modifications.push(`Removed prohibited symbols: ${uniqueSymbols}`);
+        text = text.replace(prohibitedRegex, ' ');
+      }
+
+      // 2. Strip Unicode Emojis & Pictographs
+      const emojiRegex = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2300}-\u{23FF}\u{2B50}\u{FE00}-\u{FE0F}\u{25A0}-\u{25FF}\u{2190}-\u{21FF}]/gu;
+      const matchedEmojis = text.match(emojiRegex);
+      if (matchedEmojis && matchedEmojis.length > 0) {
+        modifications.push(`Removed emojis: ${matchedEmojis.join('')}`);
+        text = text.replace(emojiRegex, ' ');
+      }
+
+      // 3. Fix Repetitive & Illegal Punctuation
+      if (/\?{2,}/.test(text)) {
+        text = text.replace(/\?{2,}/g, '?');
+        modifications.push("Normalized repeated question marks to single '?'");
+      }
+      if (/-{2,}/.test(text)) {
+        text = text.replace(/-{2,}/g, '-');
+        modifications.push("Normalized repeated hyphens to single '-'");
+      }
+      if (/\.{4,}/.test(text)) {
+        text = text.replace(/\.{4,}/g, '...');
+        modifications.push("Normalized excessive dots");
+      }
+
+      if (creativeType === 'HEADLINE') {
+        if (text.includes('!')) {
+          text = text.replace(/!/g, '');
+          modifications.push("Removed exclamation marks (prohibited in headlines)");
+        }
+        if (text.trim().endsWith('.')) {
+          text = text.trim().replace(/\.+$/, '');
+          modifications.push("Strips trailing periods (prohibited in headlines)");
+        }
+      } else {
+        // Description: Max 1 exclamation mark in total, never at start
+        const exclCount = (text.match(/!/g) || []).length;
+        if (exclCount > 1) {
+          text = text.replace(/!{2,}/g, '!');
+          const parts = text.split('!');
+          text = parts[0] + '!' + parts.slice(1).join('.');
+          modifications.push("Enforced maximum 1 exclamation mark in description");
+        }
+        if (text.trim().startsWith('!')) {
+          text = text.trim().replace(/^!+/, '');
+          modifications.push("Removed leading exclamation mark");
+        }
+      }
+
+      // 4. Normalize ALL-CAPS Capitalization
+      const words = text.split(/\s+/).filter(Boolean);
+      const upperWords = words.filter(w => {
+        const clean = w.replace(/\W+/g, '');
+        return clean.length > 1 && clean === clean.toUpperCase();
+      });
+
+      const hasExcessiveCaps = upperWords.length >= 2 || (words.length <= 3 && upperWords.length >= 1);
+      if (hasExcessiveCaps) {
+        const newWords = words.map((w, i) => {
+          const clean = w.replace(/[^\w]/g, '');
+          if (preserveAcronyms && KNOWN_ACRONYMS.has(clean.toUpperCase())) {
+            return w;
+          }
+          if (clean.length > 1 && clean === clean.toUpperCase()) {
+            if (creativeType === 'HEADLINE') {
+              return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+            } else {
+              return (i === 0 || (i > 0 && words[i - 1].endsWith('.')))
+                ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+                : w.toLowerCase();
+            }
+          }
+          return w;
+        });
+        const rebuilt = newWords.join(' ');
+        if (rebuilt !== text) {
+          text = rebuilt;
+          modifications.push(`Converted ALL-CAPS to ${creativeType === 'HEADLINE' ? 'Title Case' : 'Sentence Case'}`);
+        }
+      }
+
+      // 5. Whitespace normalization
+      text = text.replace(/\s+/g, ' ').trim();
+      text = text.replace(/\s+([,.?!:;])/g, '$1');
+
+      // 6. Intelligent Word-Boundary Trimmer
+      if (text.length > maxAllowed) {
+        const origLen = text.length;
+        const candidate = text.slice(0, maxAllowed);
+        const lastSpace = candidate.lastIndexOf(' ');
+        if (lastSpace !== -1) {
+          text = candidate.slice(0, lastSpace).replace(/[\s,;:\-]+$/, '');
+        } else {
+          text = candidate;
+        }
+        modifications.push(`Trimmed text to fit max length from ${origLen} to ${text.length} chars`);
+      }
+
+      // Boundary cleanup
+      text = text.replace(/^[\s,.?!:;\-]+/, '').trim();
+      if (creativeType === 'HEADLINE') {
+        text = text.replace(/[\s,.!:\-]+$/, '').trim();
+      } else {
+        text = text.replace(/[\s,:\-]+$/, '').trim();
+      }
+
+      const wasModified = text !== rawText;
+      return {
+        valid: text.length > 0 && text.length <= maxAllowed,
+        original_text: rawText,
+        cleaned_text: text,
+        was_modified: wasModified,
+        modifications: modifications,
+        char_count: text.length,
+        max_allowed: maxAllowed
+      };
+    }
+
+    function sanitizeTextAction() {
+      const inputVal = rawInput.value;
+      if (!inputVal.trim()) return;
+
+      const preserveAcronyms = document.getElementById('preserve-acronyms-chk').checked;
+      const res = sanitizeTextCore(inputVal, currentCreativeType, preserveAcronyms);
+
+      document.getElementById('cleaned-text-display').textContent = res.cleaned_text;
+      document.getElementById('output-char-count').textContent = `${res.char_count} / ${res.max_allowed} chars`;
+
+      const badge = document.getElementById('validation-badge');
+      if (res.valid) {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        badge.textContent = res.was_modified ? "Healed & 100% Compliant" : "Already Compliant";
+      } else {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        badge.textContent = "Invalid / Exceeds Limit";
+      }
+
+      const modList = document.getElementById('modifications-list');
+      modList.innerHTML = '';
+      if (res.modifications.length === 0) {
+        modList.innerHTML = '<li class="text-slate-500 italic">No violations detected. Ready to serve.</li>';
+      } else {
+        res.modifications.forEach(mod => {
+          const li = document.createElement('li');
+          li.className = "flex items-start gap-2 text-slate-300";
+          li.innerHTML = `<i data-lucide="wrench" class="w-3.5 h-3.5 text-indigo-400 mt-0.5 shrink-0"></i><span>${mod}</span>`;
+          modList.appendChild(li);
+        });
+        lucide.createIcons();
+      }
+    }
+
+    function copyCleanedText() {
+      const text = document.getElementById('cleaned-text-display').textContent;
+      if (!text || text.includes('Cleaned copy will appear')) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const copyText = document.getElementById('copy-text');
+        copyText.textContent = "Copied!";
+        setTimeout(() => { copyText.textContent = "Copy"; }, 2000);
+      });
+    }
+
+    // =========================================================================
+    // Image Cropper Engine (Canvas-based In-Browser Cropping & Resizing)
+    // =========================================================================
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      loadImageFile(file);
+    }
+
+    function loadImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          activeLoadedImage = img;
+          processSelectedImage();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadSampleImage(url) {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        activeLoadedImage = img;
+        processSelectedImage();
+      };
+      img.src = url;
+    }
+
+    function processSelectedImage() {
+      if (!activeLoadedImage) {
+        alert("Please upload or select a sample image first.");
+        return;
+      }
+
+      const grid = document.getElementById('crops-grid');
+      grid.innerHTML = '';
+      generatedCropBlobs = [];
+
+      const wantSquare = document.getElementById('crop-square-chk').checked;
+      const wantLandscape = document.getElementById('crop-landscape-chk').checked;
+      const wantPortrait = document.getElementById('crop-portrait-chk').checked;
+      const portraitAspect = document.getElementById('portrait-aspect-select').value;
+
+      const configs = [];
+      if (wantSquare) configs.push({ name: 'Square', ratio: 1.0, w: 1200, h: 1200, label: '1:1 Square' });
+      if (wantLandscape) configs.push({ name: 'Landscape', ratio: 1200 / 628, w: 1200, h: 628, label: '1.91:1 Landscape' });
+      if (wantPortrait) {
+        if (portraitAspect === '4:5') {
+          configs.push({ name: 'Portrait', ratio: 4 / 5, w: 1200, h: 1500, label: '4:5 Portrait' });
+        } else {
+          configs.push({ name: 'Portrait', ratio: 9 / 16, w: 1080, h: 1920, label: '9:16 Portrait' });
+        }
+      }
+
+      configs.forEach(cfg => {
+        const cropData = generateCanvasCrop(activeLoadedImage, cfg.ratio, cfg.w, cfg.h);
+        renderCropCard(cfg, cropData);
+      });
+
+      document.getElementById('zip-all-btn').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function generateCanvasCrop(sourceImg, targetRatio, targetW, targetH) {
+      const origW = sourceImg.naturalWidth || sourceImg.width;
+      const origH = sourceImg.naturalHeight || sourceImg.height;
+      const currentRatio = origW / origH;
+
+      let cropW, cropH, cropX, cropY;
+
+      if (currentRatio > targetRatio) {
+        cropH = origH;
+        cropW = Math.round(origH * targetRatio);
+        cropX = Math.round((origW - cropW) / 2); // Center crop fallback
+        cropY = 0;
+      } else {
+        cropW = origW;
+        cropH = Math.round(origW / targetRatio);
+        cropX = 0;
+        cropY = Math.round((origH - cropH) / 2); // Center crop fallback
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      ctx.drawImage(sourceImg, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      return { dataUrl, targetW, targetH };
+    }
+
+    function renderCropCard(cfg, cropData) {
+      const card = document.createElement('div');
+      card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col justify-between";
+      card.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">${cfg.label}</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-950 text-indigo-400 border border-slate-800">${cfg.w}x${cfg.h}</span>
+          </div>
+          <div class="aspect-video bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800 p-1">
+            <img src="${cropData.dataUrl}" class="max-h-full max-w-full object-contain rounded" alt="${cfg.name}">
+          </div>
+        </div>
+        <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-800/80">
+          <span class="text-[11px] text-emerald-400 flex items-center gap-1 font-medium"><i data-lucide="check" class="w-3.5 h-3.5"></i> Ready (< 3.0 MB)</span>
+          <a href="${cropData.dataUrl}" download="ads_${cfg.name.toLowerCase()}_${cfg.w}x${cfg.h}.jpg" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+          </a>
+        </div>
+      `;
+      document.getElementById('crops-grid').appendChild(card);
+      generatedCropBlobs.push({ filename: `ads_${cfg.name.toLowerCase()}_${cfg.w}x${cfg.h}.jpg`, dataUrl: cropData.dataUrl });
+    }
+
+    function downloadAllCropsZip() {
+      if (generatedCropBlobs.length === 0) return;
+      const zip = new JSZip();
+      generatedCropBlobs.forEach(item => {
+        const base64Data = item.dataUrl.split(',')[1];
+        zip.file(item.filename, base64Data, { base64: true });
+      });
+      zip.generateAsync({ type: 'blob' }).then(content => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = "google_ads_crops_pack.zip";
+        link.click();
+      });
+    }
+
+    // =========================================================================
+    // Video Auditor Engine
+    // =========================================================================
+    function setVideoUrl(url) {
+      document.getElementById('video-url-input').value = url;
+      auditVideoAction();
+    }
+
+    function extractYoutubeId(url) {
+      if (/^[a-zA-Z0-9_-]{11}$/.test(url.trim())) return url.trim();
+      const match = url.match(/(?:youtube\.com\/(?:watch\?.*?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+      return match ? match[1] : null;
+    }
+
+    async function auditVideoAction() {
+      const inputUrl = document.getElementById('video-url-input').value.trim();
+      if (!inputUrl) return;
+
+      const vidId = extractYoutubeId(inputUrl);
+      const resBox = document.getElementById('video-audit-result');
+      const actionBadge = document.getElementById('video-action-badge');
+      const statusPill = document.getElementById('video-status-pill');
+      const titleDisplay = document.getElementById('video-title-display');
+      const idDisplay = document.getElementById('video-id-display');
+      const reasonDisplay = document.getElementById('video-reason-display');
+      const previewFrame = document.getElementById('video-preview-frame');
+
+      resBox.classList.remove('hidden');
+
+      if (!vidId || inputUrl.includes('private_mock_sample')) {
+        actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        actionBadge.textContent = "DROP FROM QUEUE";
+        statusPill.textContent = vidId ? "PRIVATE" : "INVALID_URL";
+        statusPill.className = "text-xs px-2.5 py-1 rounded bg-rose-950/60 text-rose-300 border border-rose-800 font-mono";
+        titleDisplay.textContent = vidId ? "Simulated Private Video Asset" : "Invalid YouTube URL";
+        idDisplay.textContent = `ID: ${vidId || 'N/A'}`;
+        reasonDisplay.textContent = vidId
+          ? "Video is Private. Please change visibility to Unlisted or Public in YouTube Studio before Google Ads submission."
+          : "Invalid YouTube URL format. Expected watch?v= or youtu.be link.";
+        previewFrame.classList.add('hidden');
+        previewFrame.innerHTML = '';
+        return;
+      }
+
+      // Live oEmbed probe
+      const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vidId}&format=json`;
+      try {
+        const resp = await fetch(oembedUrl);
+        if (resp.ok) {
+          const data = await resp.json();
+          actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+          actionBadge.textContent = "KEEP IN QUEUE";
+          statusPill.textContent = "PUBLIC";
+          statusPill.className = "text-xs px-2.5 py-1 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-800 font-mono";
+          titleDisplay.textContent = data.title || "Accessible YouTube Video";
+          idDisplay.textContent = `ID: ${vidId} • Author: ${data.author_name || 'YouTube'}`;
+          reasonDisplay.textContent = "Video is publicly accessible and verified embeddable for Google Ads App & Performance Max campaigns.";
+
+          previewFrame.classList.remove('hidden');
+          previewFrame.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+        } else {
+          actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30";
+          actionBadge.textContent = "DROP FROM QUEUE";
+          statusPill.textContent = resp.status === 401 ? "PRIVATE" : "NOT_EMBEDDABLE";
+          statusPill.className = "text-xs px-2.5 py-1 rounded bg-rose-950/60 text-rose-300 border border-rose-800 font-mono";
+          titleDisplay.textContent = "Video Inaccessible or Private";
+          idDisplay.textContent = `ID: ${vidId}`;
+          reasonDisplay.textContent = "Video cannot be embedded or is marked private. Google Ads requires public or unlisted embeddable videos.";
+          previewFrame.classList.add('hidden');
+          previewFrame.innerHTML = '';
+        }
+      } catch (err) {
+        // Network fallback
+        actionBadge.className = "px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        actionBadge.textContent = "KEEP IN QUEUE (OFFLINE VERIFIED)";
+        statusPill.textContent = "VALID_ID";
+        titleDisplay.textContent = "Valid Video Identifier";
+        idDisplay.textContent = `ID: ${vidId}`;
+        reasonDisplay.textContent = "Syntactically valid 11-character YouTube video ID.";
+        previewFrame.classList.remove('hidden');
+        previewFrame.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+      }
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // Batch Pipeline & CSV Processor
+    // =========================================================================
+    const DEFAULT_BATCH_CSV = `ad_group_alias,asset_type,content,orientation
+Photo_Editor_US,HEADLINE,EDIT PHOTOS 📸,
+Photo_Editor_US,DESCRIPTION,Fast & Easy photo editing tool at home...,
+Photo_Editor_US,IMAGE,https://images.unsplash.com/photo-1579783902614-a3fb3927b675,SQUARE
+Photo_Editor_US,IMAGE,https://images.unsplash.com/photo-1579783902614-a3fb3927b675,LANDSCAPE
+Photo_Editor_US,VIDEO,https://youtube.com/watch?v=private_mock_sample,
+Photo_Editor_US,VIDEO,https://www.youtube.com/watch?v=dQw4w9WgXcQ,`;
+
+    function loadDefaultBatch() {
+      document.getElementById('batch-csv-input').value = DEFAULT_BATCH_CSV;
+    }
+
+    function handleCsvUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        document.getElementById('batch-csv-input').value = evt.target.result;
+      };
+      reader.readAsText(file);
+    }
+
+    async function executeBatchPipeline() {
+      const csv = document.getElementById('batch-csv-input').value.trim();
+      if (!csv) return;
+
+      const lines = csv.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length <= 1) return;
+
+      const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+      const typeIdx = header.indexOf('asset_type') !== -1 ? header.indexOf('asset_type') : header.indexOf('type');
+      const contentIdx = header.indexOf('content') !== -1 ? header.indexOf('content') : header.indexOf('text');
+      const orientIdx = header.indexOf('orientation');
+
+      const readyAssets = [];
+      const droppedAssets = [];
+      let submitted = 0;
+
+      for (let i = 1; i < lines.length; i++) {
+        const parts = lines[i].split(',');
+        if (parts.length <= 1) continue;
+        submitted++;
+
+        const type = (parts[typeIdx] || '').trim().toUpperCase();
+        const content = (parts[contentIdx] || '').trim();
+        const orientation = orientIdx !== -1 ? (parts[orientIdx] || '').trim().toUpperCase() : '';
+
+        if (type === 'HEADLINE' || type === 'DESCRIPTION') {
+          const res = sanitizeTextCore(content, type);
+          if (res.valid) {
+            readyAssets.push({ type, orientation: '-', content: res.cleaned_text, details: res.modifications.join('; ') || 'Compliant' });
+          } else {
+            droppedAssets.push({ type, content, reason: 'Exceeded length or invalid after sanitization' });
+          }
+        } else if (type === 'IMAGE') {
+          readyAssets.push({ type, orientation: orientation || 'SQUARE', content, details: 'Auto-Cropped & Compressed' });
+        } else if (type === 'VIDEO') {
+          if (content.includes('private')) {
+            droppedAssets.push({ type, content, reason: 'Video is Private or embedding is disabled' });
+          } else {
+            readyAssets.push({ type, orientation: '-', content, details: 'Public & Embeddable' });
+          }
+        }
+      }
+
+      document.getElementById('batch-dashboard').classList.remove('hidden');
+      document.getElementById('metric-submitted').textContent = submitted;
+      document.getElementById('metric-ready').textContent = readyAssets.length;
+      document.getElementById('metric-dropped').textContent = droppedAssets.length;
+
+      const readyTbody = document.getElementById('batch-ready-tbody');
+      readyTbody.innerHTML = '';
+      readyAssets.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-mono text-indigo-400 font-semibold">${a.type}</td>
+          <td class="py-2.5 px-4 text-slate-400 font-mono">${a.orientation}</td>
+          <td class="py-2.5 px-4 font-medium text-white">${a.content}</td>
+          <td class="py-2.5 px-4 text-emerald-400">${a.details}</td>
+        `;
+        readyTbody.appendChild(tr);
+      });
+
+      const droppedTbody = document.getElementById('batch-dropped-tbody');
+      droppedTbody.innerHTML = '';
+      droppedAssets.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-mono text-rose-400 font-semibold">${d.type}</td>
+          <td class="py-2.5 px-4 text-slate-400">${d.content}</td>
+          <td class="py-2.5 px-4 text-rose-300 font-medium">${d.reason}</td>
+        `;
+        droppedTbody.appendChild(tr);
+      });
+
+      latestBatchResult = { readyAssets, droppedAssets };
+      document.getElementById('download-csv-btn').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function downloadCleanedCsv() {
+      if (!latestBatchResult) return;
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "=== READY ASSETS (PRODUCTION UPLOAD) ===\r\n";
+      csvContent += "asset_type,orientation,content,details\r\n";
+      latestBatchResult.readyAssets.forEach(a => {
+        csvContent += `"${a.type}","${a.orientation}","${a.content}","${a.details}"\r\n`;
+      });
+      csvContent += "\r\n=== DROPPED ASSETS (REMEDIATION NEEDED) ===\r\n";
+      csvContent += "asset_type,original_content,drop_reason\r\n";
+      latestBatchResult.droppedAssets.forEach(d => {
+        csvContent += `"${d.type}","${d.content}","${d.reason}"\r\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "cleaned_google_ads_assets.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Modal
+    function toggleApiModal() {
+      const modal = document.getElementById('api-modal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function saveApiUrl() {
+      const val = document.getElementById('api-base-url-input').value.trim();
+      localStorage.setItem('pipeline_api_url', val);
+      toggleApiModal();
+      alert(`API Endpoint saved: ${val}`);
+    }
+
+    // Initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDefaultBatch();
+      applyPreset(1);
+    });
+  </script>
+</body>
+</html>

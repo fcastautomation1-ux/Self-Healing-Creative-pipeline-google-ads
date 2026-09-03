@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+.git
+.gitignore
+.pytest_cache
+.coverage
+htmlcov
+uploads
+processed_assets
+credentials.json
+service_account.json
+.env
